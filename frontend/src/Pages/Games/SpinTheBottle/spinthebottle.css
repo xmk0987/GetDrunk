@@ -1,0 +1,40 @@
+.spinthebottle-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinthebottle-main img {
+  width: auto;
+  height: 250px;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.bottle {
+  transition: transform 2s ease-out;
+}
+
+.spin-button {
+  position: absolute;
+  font-size: var(--card-button-font-size);
+  padding: 5px 15px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  bottom: 50px;
+  background-color: black;
+  color: var(--secondary-color);
+}
+
+.spin-button:hover {
+  background-color: var(--accent-color3);
+  color: black;
+}

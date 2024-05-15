@@ -1,0 +1,18 @@
+.fuck-the-dealer-container {
+  width: 100%;
+  height: 100%;
+  max-height: calc(100vh - var(--navbar-height));
+  padding-top: var(--header-padding);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+.fuck-the-dealer-game-board {
+  width: 100%;
+  height: 100%;
+  flex-grow: 1;
+  background-color: blue;
+}
+

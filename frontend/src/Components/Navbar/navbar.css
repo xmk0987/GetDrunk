@@ -1,0 +1,27 @@
+.main-navbar {
+  position: fixed;
+  height: var(--navbar-height);
+  width: 100%;
+  background-color: var(--secondary-color);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 2rem;
+  z-index: 10;
+  position: relative;
+}
+
+.main-navbar button {
+  font-size: var(--nav-font-size);
+  color: var(--accent-color);
+}
+
+.main-navbar button:hover {
+  color: var(--accent-color3);
+}
+
+.main-navbar ul {
+  display: inline-flex;
+  gap: 2rem;
+  list-style: none;
+}
