@@ -1,0 +1,24 @@
+.home-main {
+  position: relative;
+}
+
+.lets-drink {
+  position: absolute;
+  right: 50%;
+  top: 50%;
+  transform: translate(50%, -50%);
+}
+
+.lets-drink::before {
+  content: "READY TO DRINK?";
+}
+
+.lets-drink:hover {
+  background-color: var(--accent-color3);
+  color: white;
+  box-shadow: none;
+}
+
+.lets-drink:hover::before {
+  content: "LET'S DRINK!!";
+}

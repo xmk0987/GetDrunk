@@ -1,0 +1,55 @@
+.lobby {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.lobby-player-amount {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.game-room-players {
+  width: 100%;
+  display: inline-flex;
+  flex-grow: 1;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  overflow: scroll;
+  padding: 20px 0;
+}
+
+.player {
+  background-color: var(--secondary-color);
+  height: 50px;
+  max-width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 35px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+}
+
+.game-info {
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+}
+
+.game-info span {
+  color: white;
+  text-shadow: var(--text-shadow);
+  letter-spacing: 2px;
+  font-size: 30px;
+}

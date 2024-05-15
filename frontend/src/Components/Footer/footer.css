@@ -1,0 +1,12 @@
+footer {
+  height: 50px;
+  width: 100%;
+  background-color: var(--secondary-color);
+  display: flex;
+  justify-content: center;
+}
+
+footer ul {
+  list-style: none;
+  text-align: center;
+}

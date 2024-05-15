@@ -1,0 +1,85 @@
+.game-card {
+  width: 100%;
+  height: 100%;
+  background-color: var(--secondary-color);
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  gap: 5px;
+}
+
+.game-card-header {
+  color: var(--accent-color);
+  font-size: var(--second-header-font-size);
+}
+
+.game-card-main {
+  max-height: 255px;
+  width: 100%;
+}
+
+.game-card-info {
+  color: black;
+  text-align: center;
+  min-height: 50px;
+}
+
+.game-card img {
+  width: 100%;
+  height: 200px;
+  border: 2px solid black;
+}
+
+.game-card-button {
+  margin: 5px 0;
+  font-size: var(--card-button-font-size);
+  background-color: black;
+  color: yellow;
+  width: 150px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.game-card-button::before {
+  content: "PLAY?";
+}
+
+.game-card-button:hover::before {
+  content: "LET'S GOOO!!";
+}
+
+.game-card-button:hover {
+  background-color: var(--accent-color3);
+  color: black;
+}
+
+.game-card-rules-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.game-card-players {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.game-card-players p {
+  color: black;
+}
+.game-card-players ion-icon {
+  color: black;
+}
+
+.game-card-rule-button {
+  text-decoration: underline;
+}
+
+.game-card-rule-button:hover {
+  color: var(--accent-color2);
+}
