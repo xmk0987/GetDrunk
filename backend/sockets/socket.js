@@ -55,7 +55,14 @@ function initializeSocket(server, options) {
 
     socket.on("start-game", (roomId) => {
       if (socketData[roomId]) {
-        socket.to(roomId).emit("game-started");
+        console.log(socketData[roomId]);
+
+        // Update the game state
+        socketData[roomId].roomStatus = "game";
+        socketData[roomId].game.status = "playing";
+
+        // Emit the updated state to all clients in the room
+        io.to(roomId).emit("game-started", socketData[roomId]);
       }
     });
 
