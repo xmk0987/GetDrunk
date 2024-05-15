@@ -15,14 +15,14 @@ const FuckTheDealer: React.FC = () => {
     message,
     error,
     loading,
-    gameState,
+    roomState,
     username,
     roomId,
     roomInfo,
     setError,
     setLoading,
     startGame,
-  } = useGameSocket( ftdLogic);
+  } = useGameSocket(ftdLogic);
 
   if (loading) {
     return <div>Loading...</div>; // Render loading state
@@ -36,7 +36,7 @@ const FuckTheDealer: React.FC = () => {
     <>
       <Navbar text="F*CK THE DEALER" />
       <main className="fuck-the-dealer-container">
-        {gameState === "lobby" && roomInfo ? (
+        {roomState === "lobby" && roomInfo ? (
           <GameLobby
             roomId={roomId}
             roomData={roomInfo}
@@ -44,7 +44,7 @@ const FuckTheDealer: React.FC = () => {
             gameData={GAME}
             onStartGame={startGame}
           />
-        ) : gameState === "game" ? (
+        ) : roomState === "game" ? (
           <div>Game started</div>
         ) : (
           <GetIntoGame

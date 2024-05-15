@@ -8,11 +8,45 @@ export const useGameSocket = (gameLogic: any) => {
   const [message, setMessage] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [gameState, setGameState] = useState<string>("choose");
+  const [roomState, setRoomStatus] = useState<string>(() => {
+    return sessionStorage.getItem("roomState") || "choose";
+  });
 
-  const [username, setUsername] = useState<string>("");
-  const [roomId, setRoomId] = useState<string | null>(null);
-  const [roomInfo, setRoomInfo] = useState<RoomData | null>(null);
+  const [username, setUsername] = useState<string>(() => {
+    return sessionStorage.getItem("username") || "";
+  });
+  const [roomId, setRoomId] = useState<string | null>(() => {
+    return sessionStorage.getItem("roomId") || null;
+  });
+  const [roomInfo, setRoomInfo] = useState<RoomData | null>(() => {
+    const savedRoomInfo = sessionStorage.getItem("roomInfo");
+    return savedRoomInfo ? JSON.parse(savedRoomInfo) : null;
+  });
+
+  // Save state to local storage when it changes
+  useEffect(() => {
+    sessionStorage.setItem("roomState", roomState);
+  }, [roomState]);
+
+  useEffect(() => {
+    sessionStorage.setItem("username", username);
+  }, [username]);
+
+  useEffect(() => {
+    if (roomId !== null) {
+      sessionStorage.setItem("roomId", roomId);
+    } else {
+      sessionStorage.removeItem("roomId");
+    }
+  }, [roomId]);
+
+  useEffect(() => {
+    if (roomInfo !== null) {
+      sessionStorage.setItem("roomInfo", JSON.stringify(roomInfo));
+    } else {
+      sessionStorage.removeItem("roomInfo");
+    }
+  }, [roomInfo]);
 
   useEffect(() => {
     if (socket) {
@@ -23,28 +57,28 @@ export const useGameSocket = (gameLogic: any) => {
       socket.on("room-created", (data) => {
         console.log("Room created, received information", data);
         const { roomId, username, roomData } = data;
-        setRoomId(roomId); // Use the received roomId as needed
-        setUsername(username); // Use the received username as needed
+        setRoomId(roomId);
+        setUsername(username);
         setRoomInfo(roomData);
-        setLoading(false); // Stop loading state
-        setGameState("lobby"); // Move to lobby state
+        setLoading(false);
+        setRoomStatus("lobby");
       });
 
       socket.on("room-joined", (data) => {
         console.log("Room joined, received information", data);
         const { roomId, username, roomData } = data;
-        setRoomId(roomId); // Use the received roomId as needed
-        setUsername(username); // Use the received username as needed
+        setRoomId(roomId);
+        setUsername(username);
         setRoomInfo(roomData);
-        setLoading(false); // Stop loading state
-        setGameState("lobby"); // Move to lobby state
+        setLoading(false);
+        setRoomStatus("lobby");
       });
 
       socket.on("new-player", (player: Player) => {
         console.log("new player joined", player.username);
         setRoomInfo((prevRoomInfo) => {
           if (!prevRoomInfo) {
-            return null; // or handle initializing a new RoomData object if needed
+            return null;
           }
 
           return {
@@ -54,8 +88,9 @@ export const useGameSocket = (gameLogic: any) => {
         });
       });
 
-      socket.on("game-started", () => {
-        setGameState("game");
+      socket.on("game-started", (data) => {
+        setRoomInfo(data);
+        setRoomStatus(data.roomStatus);
       });
 
       return () => {
@@ -70,7 +105,7 @@ export const useGameSocket = (gameLogic: any) => {
 
   const startGame = () => {
     socket?.emit("start-game", roomId);
-    setGameState("game");
+    setRoomStatus("game");
     gameLogic.startGame();
   };
 
@@ -78,7 +113,7 @@ export const useGameSocket = (gameLogic: any) => {
     message,
     error,
     loading,
-    gameState,
+    roomState,
     username,
     roomId,
     roomInfo,
