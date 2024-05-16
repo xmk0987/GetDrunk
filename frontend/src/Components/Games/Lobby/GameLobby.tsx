@@ -58,7 +58,7 @@ const GameLobby: React.FC<GameLobbyProps> = ({
           <button
             className="default-btn-style"
             onClick={onStartGame}
-            disabled={roomData.players.length < gameData.minPlayers}
+            /* disabled={roomData.players.length < gameData.minPlayers} */
           >
             START
           </button>

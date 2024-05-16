@@ -6,6 +6,9 @@ export interface Player {
 export interface Game {
   name: string;
   status: string;
+  dealer: string | null;
+  guesser: string | null;
+  deck: any;
 }
 
 export interface RoomData {

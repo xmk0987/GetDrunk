@@ -1,8 +1,9 @@
 const { Server } = require("socket.io");
 const { nanoid } = require("nanoid");
+const FuckTheDealerLogic = require("../gamesLogic/FuckTheDealerLogic");
 
 const socketData = {};
-const socketIdToUsername = {}; // Map to keep track of socket IDs to usernames
+const socketIdToUsername = {};
 
 function initializeSocket(server, options) {
   const io = new Server(server, options);
@@ -14,7 +15,6 @@ function initializeSocket(server, options) {
       const { game_name, username } = data;
       console.log("Trying to create room with username:", username);
 
-      // Additional logic for room creation
       const roomId = nanoid(10);
       socket.join(roomId);
 
@@ -30,7 +30,11 @@ function initializeSocket(server, options) {
 
       socketData[roomId] = roomData;
       socketIdToUsername[socket.id] = username;
-      socket.emit("room-created", { roomId, username, roomData });
+      socket.emit("room-created", {
+        roomId,
+        player: { socketId: socket.id, username },
+        roomData,
+      });
     });
 
     socket.on("join-room", (data) => {
@@ -42,7 +46,7 @@ function initializeSocket(server, options) {
         socketData[roomId].players.push({ socketId: socket.id, username });
         socketIdToUsername[socket.id] = username;
         socket.emit("room-joined", {
-          username,
+          player: { socketId: socket.id, username },
           roomId,
           roomData: socketData[roomId],
         });
@@ -55,14 +59,16 @@ function initializeSocket(server, options) {
 
     socket.on("start-game", (roomId) => {
       if (socketData[roomId]) {
-        console.log(socketData[roomId]);
-
-        // Update the game state
-        socketData[roomId].roomStatus = "game";
-        socketData[roomId].game.status = "playing";
-
-        // Emit the updated state to all clients in the room
-        io.to(roomId).emit("game-started", socketData[roomId]);
+        console.log("starting game");
+        switch (socketData[roomId].game.name) {
+          case "fuckTheDealer":
+            const ftdLogic = new FuckTheDealerLogic(io, roomId, socketData);
+            ftdLogic.startGame();
+            break;
+          default:
+            console.log(`Unknown game: ${socketData[roomId].game.name}`);
+            break;
+        }
       }
     });
 
@@ -71,6 +77,7 @@ function initializeSocket(server, options) {
       const username = socketIdToUsername[socket.id];
       delete socketIdToUsername[socket.id];
 
+      console.log(socketData);
       for (const roomId in socketData) {
         const room = socketData[roomId];
         const playerIndex = room.players.findIndex(
