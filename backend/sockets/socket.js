@@ -21,19 +21,18 @@ function initializeSocket(server, options) {
       const roomData = {
         game: {
           name: game_name,
-          status: "not started",
+          status: "lobby",
         },
         players: [{ socketId: socket.id, username }],
-        admin: username,
-        roomStatus: "lobby",
+        admin: socket.id,
+        roomId: roomId,
       };
 
       socketData[roomId] = roomData;
       socketIdToUsername[socket.id] = username;
       socket.emit("room-created", {
-        roomId,
-        player: { socketId: socket.id, username },
         roomData,
+        player: { socketId: socket.id, username },
       });
     });
 
@@ -41,13 +40,12 @@ function initializeSocket(server, options) {
       const { username, roomId } = data;
       console.log("Trying to join room", roomId, "with username:", username);
 
-      if (socketData[roomId]) {
+      if (socketData[roomId] && socketData[roomId].game.status === "lobby") {
         socket.join(roomId);
         socketData[roomId].players.push({ socketId: socket.id, username });
         socketIdToUsername[socket.id] = username;
         socket.emit("room-joined", {
           player: { socketId: socket.id, username },
-          roomId,
           roomData: socketData[roomId],
         });
         console.log("player added", socketData[roomId]);
@@ -69,6 +67,26 @@ function initializeSocket(server, options) {
             console.log(`Unknown game: ${socketData[roomId].game.name}`);
             break;
         }
+      } else {
+        socket.emit("error", "Room does not exist");
+      }
+    });
+
+    socket.on("player-action", (data) => {
+      const { action, roomId } = data;
+      if (socketData[roomId]) {
+        console.log(`Action received: ${action} for room: ${roomId}`);
+        switch (socketData[roomId].game.name) {
+          case "fuckTheDealer":
+            const ftdLogic = new FuckTheDealerLogic(io, roomId, socketData);
+            ftdLogic.handlePlayerAction(action, socket.id);
+            break;
+          default:
+            console.log(`Unknown game: ${socketData[roomId].game.name}`);
+            break;
+        }
+      } else {
+        socket.emit("error", "Room does not exist");
       }
     });
 

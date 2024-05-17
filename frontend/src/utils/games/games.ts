@@ -1,13 +1,13 @@
-import spinTheBottleImage from "../images/spinthebottle.webp";
-import truthOrdareImage from "../images/truthordare.webp";
-import bussDriverImage from "../images/bussdriver.webp";
-import ringOfFireImage from "../images/ringoffire.webp";
-import beerpongImage from "../images/beerpong.webp";
-import thirtyShotsImage from "../images/30min30shot.webp";
-import horseRaceImage from "../images/horserace.webp";
-import drunkPokerImage from "../images/sipPoker.webp";
-import biggerCardImage from "../images/biggerCard.webp";
-import drunkDealerImage from "../images/drunkDealer.webp";
+import spinTheBottleImage from "../images/games/spinthebottle.webp";
+import truthOrdareImage from "../images/games/truthordare.webp";
+import bussDriverImage from "../images/games/bussdriver.webp";
+import ringOfFireImage from "../images/games/ringoffire.webp";
+import beerpongImage from "../images/games/beerpong.webp";
+import thirtyShotsImage from "../images/games/30min30shot.webp";
+import horseRaceImage from "../images/games/horserace.webp";
+import drunkPokerImage from "../images/games/sipPoker.webp";
+import biggerCardImage from "../images/games/biggerCard.webp";
+import drunkDealerImage from "../images/games/drunkDealer.webp";
 
 // Define the interface for each game's properties
 export interface Game {

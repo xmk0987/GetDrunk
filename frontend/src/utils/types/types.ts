@@ -15,7 +15,7 @@ export interface RoomData {
   game: Game;
   players: Player[];
   admin: string;
-  roomStatus: string;
+  roomId: string;
 }
 
 export interface GameData {

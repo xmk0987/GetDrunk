@@ -8,7 +8,7 @@ import { GameData, RoomData } from "../../../utils/types/types";
 
 interface GameLobbyProps {
   roomId: string | null;
-  username: string;
+  player: any;
   gameData: GameData;
   roomData: RoomData;
   onStartGame: () => void;
@@ -16,7 +16,7 @@ interface GameLobbyProps {
 
 const GameLobby: React.FC<GameLobbyProps> = ({
   roomId,
-  username,
+  player,
   gameData,
   roomData,
   onStartGame,
@@ -25,14 +25,14 @@ const GameLobby: React.FC<GameLobbyProps> = ({
     <div className="lobby">
       <section className="game-room-players">
         {roomData.players.length > 0 &&
-          roomData.players.map((player, index) => (
+          roomData.players.map((mPlayer, index) => (
             <div
               key={index}
               className={`player ${
-                username === player.username ? "accent-3-bg" : ""
+                player?.username === mPlayer.username ? "accent-3-bg" : ""
               }`}
             >
-              {player.username}
+              {mPlayer.username}
             </div>
           ))}
       </section>
@@ -54,7 +54,7 @@ const GameLobby: React.FC<GameLobbyProps> = ({
         >
           {roomData.players.length} / {gameData.maxPlayers}
         </span>
-        {roomData.admin === username && (
+        {roomData.admin === player?.socketId && (
           <button
             className="default-btn-style"
             onClick={onStartGame}
