@@ -92,6 +92,15 @@ export const useGameSocket = (initialGameLogic: FuckTheDealerLogic) => {
         gameLogic.setGameData(gameData);
       });
 
+      socket.on("guess-again", (data) => {
+        console.log("Guess again");
+        const { message, gameData } = data;
+        console.log(message, gameData);
+        setRoomInfo(gameData);
+        setMessage(message);
+        gameLogic.setGameData(gameData);
+      });
+
       return () => {
         socket.off("connect");
         socket.off("room-created");
@@ -108,9 +117,13 @@ export const useGameSocket = (initialGameLogic: FuckTheDealerLogic) => {
     }
   };
 
-  const handlePlayerAction = (action: string) => {
+  const handlePlayerAction = (action: string, data?: any) => {
     if (roomInfo?.roomId && socket) {
-      gameLogic.handlePlayerAction(action, socket, roomInfo.roomId);
+      if (data !== undefined && data !== null) {
+        gameLogic.handlePlayerAction(action, socket, roomInfo.roomId, data);
+      } else {
+        gameLogic.handlePlayerAction(action, socket, roomInfo.roomId);
+      }
     }
   };
 

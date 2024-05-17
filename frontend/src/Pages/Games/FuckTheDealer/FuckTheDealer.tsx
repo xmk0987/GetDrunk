@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Navbar from "../../../Components/Navbar/Navbar";
 import GetIntoGame from "../../../Components/Games/GetIntoGame/GetIntoGame";
 import GameLobby from "../../../Components/Games/Lobby/GameLobby";
@@ -27,20 +27,8 @@ const FuckTheDealer: React.FC = () => {
   } = useGameSocket(ftdLogic);
 
   const [guessedCard, setGuessedCard] = useState<number | null>(null);
-  const [cardToGuessValue, setCardToGuessValue] = useState<number | null>(null);
   const [bigger, setBigger] = useState<boolean>(false);
   const [smaller, setSmaller] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (gameLogic && gameLogic.deck?.cards?.length > 0) {
-      const firstCardValue = mapCardValueToNumber(
-        gameLogic.deck.cards[0].value
-      );
-      if (!isNaN(firstCardValue)) {
-        setCardToGuessValue(firstCardValue);
-      }
-    }
-  }, [gameLogic]);
 
   const mapCardValueToNumber = (value: string): number => {
     if (value === "ACE") return 1;
@@ -53,26 +41,37 @@ const FuckTheDealer: React.FC = () => {
   const handleCardClick = (index: number) => {
     console.log("Card clicked");
     setGuessedCard(index);
-    console.log(gameLogic);
     const cardToGuessValue = mapCardValueToNumber(
       gameLogic.deck!.cards[0].value
     );
-    console.log(cardToGuessValue);
-    if (cardToGuessValue === index) {
+    if (gameLogic.guessNumber === 2 && cardToGuessValue !== index) {
+      console.log("TURN OVER 2 wrong guesses");
+      setBigger(false);
+      setSmaller(false);
+      handlePlayerAction("GUESS_WRONG", { value: index });
+    } else if (cardToGuessValue < index) {
+      if (gameLogic.deck.remaining <= 20) {
+        handlePlayerAction("GUESS_WRONG", { value: index });
+      } else {
+        console.log("card to guess is smaller");
+        setBigger(false);
+        setSmaller(true);
+        handlePlayerAction("GUESS_SMALLER", { value: index });
+      }
+    } else if (cardToGuessValue > index) {
+      if (gameLogic.deck.remaining <= 20) {
+        handlePlayerAction("GUESS_WRONG", { value: index });
+      } else {
+        console.log("card to guess is bigger");
+        setBigger(true);
+        setSmaller(false);
+        handlePlayerAction("GUESS_BIGGER", { value: index });
+      }
+    } else {
       console.log("card to guess is correct");
       setBigger(false);
       setSmaller(false);
       handlePlayerAction("GUESS_CORRECT");
-    } else if (cardToGuessValue < index) {
-      console.log("card to guess is smaller");
-      setBigger(false);
-      setSmaller(true);
-      handlePlayerAction("GUESS_SMALLER");
-    } else if (cardToGuessValue > index) {
-      console.log("card to guess is bigger");
-      setBigger(true);
-      setSmaller(false);
-      handlePlayerAction("GUESS_BIGGER");
     }
   };
 
@@ -115,7 +114,6 @@ const FuckTheDealer: React.FC = () => {
       return acc;
     }, {} as Record<string, Card[]>);
 
-  console.log(sortedGroupedCards);
   return (
     <>
       <Navbar text="F*CK THE DEALER" />
@@ -153,7 +151,7 @@ const FuckTheDealer: React.FC = () => {
               </section>
               <section className="ftd-turn-counter">
                 <p>
-                  Wrong guesses: <span>0/3</span>
+                  Wrong guesses: <span>{gameLogic.dealerTurn - 1}/3</span>
                 </p>
               </section>
               <section className="ftd-played-cards-container">

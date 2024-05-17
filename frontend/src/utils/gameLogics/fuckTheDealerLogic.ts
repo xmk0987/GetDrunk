@@ -41,8 +41,17 @@ export class FuckTheDealerLogic {
     this.playedCards = playedCards;
   }
 
-  handlePlayerAction(action: string, socket: Socket, roomId: string | null) {
+  handlePlayerAction(
+    action: string,
+    socket: Socket,
+    roomId: string | null,
+    data?: any
+  ) {
     console.log(`Fuck the dealer player action: ${action}`);
-    socket.emit("player-action", { action, roomId });
+    if (data !== undefined && data !== null) {
+      socket.emit("player-action", { action, roomId, data });
+    } else {
+      socket.emit("player-action", { action, roomId });
+    }
   }
 }

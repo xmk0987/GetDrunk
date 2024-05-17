@@ -73,13 +73,14 @@ function initializeSocket(server, options) {
     });
 
     socket.on("player-action", (data) => {
-      const { action, roomId } = data;
+      const { action, roomId, ...extraData } = data; // Destructure action, roomId and extra data
+      console.log("Ekstra data", extraData);
       if (socketData[roomId]) {
         console.log(`Action received: ${action} for room: ${roomId}`);
         switch (socketData[roomId].game.name) {
           case "fuckTheDealer":
             const ftdLogic = new FuckTheDealerLogic(io, roomId, socketData);
-            ftdLogic.handlePlayerAction(action, socket.id);
+            ftdLogic.handlePlayerAction(action, extraData); // Pass extra data to the game logic
             break;
           default:
             console.log(`Unknown game: ${socketData[roomId].game.name}`);
