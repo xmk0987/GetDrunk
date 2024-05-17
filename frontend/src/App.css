@@ -102,6 +102,11 @@ button:disabled:active {
   color: red !important;
 }
 
+.you {
+  color: var(--accent-color3);
+  text-shadow: var(--text-shadow);
+}
+
 @media only screen and (max-width: 1100px) {
   .main-header {
     transform: translate(50%, 50%);

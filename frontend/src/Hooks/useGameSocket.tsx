@@ -87,6 +87,9 @@ export const useGameSocket = (initialGameLogic: FuckTheDealerLogic) => {
         console.log("Next turn starting");
         const { message, gameData } = data;
         console.log(message, gameData);
+        setRoomInfo(gameData);
+        setMessage(message);
+        gameLogic.setGameData(gameData);
       });
 
       return () => {

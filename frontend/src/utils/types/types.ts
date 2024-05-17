@@ -1,26 +1,39 @@
+// types.ts
+export interface Card {
+  code: string;
+  image: string;
+  value: string;
+  suit: string;
+}
+
+export interface Deck {
+  deck_id: string;
+  cards: Card[];
+}
+
 export interface Player {
   socketId: string;
   username: string;
 }
 
-export interface Game {
-  name: string;
-  status: string;
-  dealer: string | null;
-  guesser: string | null;
-  deck: any;
-}
-
 export interface RoomData {
-  game: Game;
-  players: Player[];
-  admin: string;
   roomId: string;
+  game: {
+    name: string;
+    status: string;
+    deck?: Deck;
+    playedCards?: Card[];
+  };
+  players: Player[];
+  dealer: string;
+  guesser: string;
 }
 
-export interface GameData {
-  name: string;
-  maxPlayers: number;
-  rules: string[];
-  minPlayers: number;
+export interface GameLogic {
+  status: string;
+  players: Player[];
+  dealer: string;
+  guesser: string;
+  deck?: Deck;
+  playedCards: Card[];
 }

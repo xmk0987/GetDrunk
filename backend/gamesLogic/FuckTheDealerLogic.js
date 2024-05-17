@@ -27,6 +27,7 @@ class FuckTheDealerLogic {
         roomData.game.deck = deck; // Store deck data in roomData
         roomData.game.dealerTurn = 0;
         roomData.game.guessNumber = 1;
+        roomData.game.playedCards = [];
 
         // Assign dealer and player in turn
         const players = roomData.players;
@@ -39,8 +40,8 @@ class FuckTheDealerLogic {
         const playerInTurn = players[playerInTurnIndex];
 
         // Add dealer and player in turn to roomData
-        roomData.game.dealer = dealer.socketId;
-        roomData.game.guesser = playerInTurn.socketId;
+        roomData.game.dealer = dealer;
+        roomData.game.guesser = playerInTurn;
 
         this.io.to(this.roomId).emit("game-started", roomData);
       }
@@ -57,13 +58,13 @@ class FuckTheDealerLogic {
     }
   }
 
-  handlePlayerAction(action, socketId) {
-    console.log(`Fuck the dealer action: ${action} by socket ${socketId}`);
+  handlePlayerAction(action) {
+    console.log(`Fuck the dealer action: ${action}`);
     // Implement action handling logic based on action type
     switch (action) {
       case "GUESS_CORRECT":
         console.log("GUESS_CORRECT");
-        this.handleGuessCorrect(socketId);
+        this.handleGuessCorrect();
         break;
       case "GUESS_BIGGER":
         break;
@@ -75,23 +76,37 @@ class FuckTheDealerLogic {
     }
   }
 
-  async handleGuessCorrect(socketId) {
+  async handleGuessCorrect() {
     const deckId = this.socketData[this.roomId].game.deck.deck_id;
     const guessedCard = this.socketData[this.roomId].game.deck.cards[0];
     const addCard = await addToPile(deckId, "played", guessedCard.code);
     if (addCard.success) {
-      const deck = await listPileCards(deckId, "played");
-      this.socketData[this.roomId].game.deck = deck;
-      this.socketData[this.roomId].game.dealerTurn = 0;
+      const playedCards = await listPileCards(deckId, "played");
       const message =
         this.socketData[this.roomId].game.guessNumber === 1
-          ? "Dealer drink 5"
-          : "Dealer drink 2";
+          ? `${
+              this.socketData[this.roomId].game.guesser.username
+            } guessed correct ${guessedCard.code}. ${
+              this.socketData[this.roomId].game.dealer.username
+            } drink 5`
+          : `${
+              this.socketData[this.roomId].game.guesser.username
+            } guessed correct ${guessedCard.code}. ${
+              this.socketData[this.roomId].game.dealer.username
+            } drink 2`;
+      const deck = await drawACard(deckId);
+      this.socketData[this.roomId].game.deck = deck;
+      this.socketData[this.roomId].game.dealerTurn = 0;
+      this.socketData[this.roomId].game.playedCards =
+        playedCards.piles.played.cards;
       this.socketData[this.roomId].game.guessNumber = 1;
       this.changeGuesser();
-      this.io
-        .to(this.roomId)
-        .emit("next-turn", { gameData: this.socketData[this.roomId], message });
+
+      this.io.to(this.roomId).emit("next-turn", {
+        gameData: this.socketData[this.roomId],
+        message,
+        playedCards,
+      });
     } else {
       console.log("Error occured");
     }
@@ -110,7 +125,7 @@ class FuckTheDealerLogic {
       newGuesserIndex = (newGuesserIndex + 1) % players.length;
     } while (players[newGuesserIndex].socketId === roomData.game.dealer);
 
-    roomData.game.guesser = players[newGuesserIndex].socketId;
+    roomData.game.guesser = players[newGuesserIndex];
   }
 }
 

@@ -7,6 +7,7 @@ import { games } from "../../../utils/games/games";
 import { FuckTheDealerLogic } from "../../../utils/gameLogics/fuckTheDealerLogic";
 import "./fuckthedealer.css";
 import { cardsBySuit } from "../../../utils/images/cards/cards";
+import { Card } from "../../../utils/types/types";
 
 const FuckTheDealer: React.FC = () => {
   const GAME = games["fuckTheDealer"];
@@ -41,7 +42,7 @@ const FuckTheDealer: React.FC = () => {
     }
   }, [gameLogic]);
 
-  const mapCardValueToNumber = (value: string) => {
+  const mapCardValueToNumber = (value: string): number => {
     if (value === "ACE") return 1;
     if (value === "JACK") return 11;
     if (value === "QUEEN") return 12;
@@ -54,7 +55,7 @@ const FuckTheDealer: React.FC = () => {
     setGuessedCard(index);
     console.log(gameLogic);
     const cardToGuessValue = mapCardValueToNumber(
-      gameLogic.deck.cards[0].value
+      gameLogic.deck!.cards[0].value
     );
     console.log(cardToGuessValue);
     if (cardToGuessValue === index) {
@@ -75,7 +76,7 @@ const FuckTheDealer: React.FC = () => {
     }
   };
 
-  const isMasked = (index: number) => {
+  const isMasked = (index: number): boolean => {
     if (guessedCard !== null) {
       if (bigger) {
         return index <= guessedCard;
@@ -86,6 +87,17 @@ const FuckTheDealer: React.FC = () => {
     return false;
   };
 
+  const groupCardsByValue = (cards: Card[]): Record<string, Card[]> => {
+    return cards.reduce((acc, card) => {
+      const cardValue = mapCardValueToNumber(card.value);
+      if (!acc[cardValue]) {
+        acc[cardValue] = [];
+      }
+      acc[cardValue].push(card);
+      return acc;
+    }, {} as Record<string, Card[]>);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -94,6 +106,16 @@ const FuckTheDealer: React.FC = () => {
     return <div>{error}</div>;
   }
 
+  const sortedGroupedCards = Object.keys(
+    groupCardsByValue(gameLogic?.playedCards || [])
+  )
+    .sort((a, b) => mapCardValueToNumber(a) - mapCardValueToNumber(b))
+    .reduce((acc, key) => {
+      acc[key] = groupCardsByValue(gameLogic?.playedCards || [])[key];
+      return acc;
+    }, {} as Record<string, Card[]>);
+
+  console.log(sortedGroupedCards);
   return (
     <>
       <Navbar text="F*CK THE DEALER" />
@@ -113,11 +135,17 @@ const FuckTheDealer: React.FC = () => {
               <section className="ftd-players">
                 {gameLogic.players.map((mPlayer) => (
                   <div className="ftd-player" key={mPlayer.socketId}>
-                    <p className="ftd-player-name">{mPlayer.username}</p>
-                    {gameLogic.dealer === mPlayer.socketId ? (
+                    <p
+                      className={`ftd-player-name ${
+                        mPlayer.socketId === player.socketId ? "you" : ""
+                      }`}
+                    >
+                      {mPlayer.username}
+                    </p>
+                    {gameLogic.dealer.socketId === mPlayer.socketId ? (
                       <p className={`ftd-player-turn dealer`}>Dealer</p>
                     ) : null}
-                    {gameLogic.guesser === mPlayer.socketId ? (
+                    {gameLogic.guesser.socketId === mPlayer.socketId ? (
                       <p className={`ftd-player-turn guesser`}>Guesser</p>
                     ) : null}
                   </div>
@@ -131,10 +159,27 @@ const FuckTheDealer: React.FC = () => {
               <section className="ftd-played-cards-container">
                 <p>Played cards:</p>
                 <div className="ftd-played-cards">
-                  <div className="ftd-card"></div>
+                  {Object.keys(sortedGroupedCards).map((value) => (
+                    <div className="ftd-card-stack" key={value}>
+                      {sortedGroupedCards[value].map(
+                        (card: Card, index: number) => (
+                          <div
+                            className="ftd-card"
+                            key={card.code}
+                            style={{ top: `${index * 25}px` }}
+                          >
+                            <img
+                              src={card.image}
+                              alt={`card-${card.code}`}
+                            ></img>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  ))}
                 </div>
               </section>
-              {gameLogic.dealer === player?.socketId ? (
+              {gameLogic.dealer.socketId === player?.socketId ? (
                 <section className="ftd-dealer-card-container">
                   {gameLogic.deck?.cards?.length === 1 ? (
                     <button className="ftd-dealer-card">
@@ -146,7 +191,7 @@ const FuckTheDealer: React.FC = () => {
                   ) : null}
                 </section>
               ) : null}
-              {gameLogic.guesser === player?.socketId ? (
+              {gameLogic.guesser.socketId === player?.socketId ? (
                 <section className="ftd-guesser-card-container">
                   <p>Guess card number:</p>
                   <div className="ftd-guesser-options">

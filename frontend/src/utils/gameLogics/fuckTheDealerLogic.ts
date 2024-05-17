@@ -3,13 +3,14 @@ import { Socket } from "socket.io-client";
 export class FuckTheDealerLogic {
   status: string = "choose";
   deck: any = null;
-  dealer: string | null = null;
-  guesser: string | null = null;
+  dealer: any = null;
+  guesser: any = null;
   dealerTurn: number = 0;
   guessNumber: number = 1;
   admin: string | null = null;
   players: Array<any> = [];
   roomId: string | null = null;
+  playedCards: Array<any> = [];
 
   startGame(socket: Socket, roomId: string) {
     console.log("send start game");
@@ -19,8 +20,15 @@ export class FuckTheDealerLogic {
 
   setGameData(data: any) {
     console.log("Game set with data:", data);
-    const { status, dealer, dealerTurn, guesser, guessNumber, deck } =
-      data.game;
+    const {
+      status,
+      dealer,
+      dealerTurn,
+      guesser,
+      guessNumber,
+      deck,
+      playedCards,
+    } = data.game;
     this.status = status;
     this.deck = deck;
     this.dealer = dealer;
@@ -30,6 +38,7 @@ export class FuckTheDealerLogic {
     this.players = data.players;
     this.roomId = data.roomId;
     this.admin = data.admin;
+    this.playedCards = playedCards;
   }
 
   handlePlayerAction(action: string, socket: Socket, roomId: string | null) {
