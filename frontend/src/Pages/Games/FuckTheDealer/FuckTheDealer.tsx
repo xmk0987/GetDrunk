@@ -1,18 +1,28 @@
-import React, { useState } from "react";
-import Navbar from "../../../Components/Navbar/Navbar";
-import GetIntoGame from "../../../Components/Games/GetIntoGame/GetIntoGame";
-import GameLobby from "../../../Components/Games/Lobby/GameLobby";
+import React, { useState, useCallback, useMemo } from "react";
+
 import { useGameSocket } from "../../../Hooks/useGameSocket";
 import { games } from "../../../utils/games/games";
 import { FuckTheDealerLogic } from "../../../utils/gameLogics/fuckTheDealerLogic";
-import "./fuckthedealer.css";
-import { cardsBySuit } from "../../../utils/images/cards/cards";
 import { Card } from "../../../utils/types/types";
 
-const FuckTheDealer: React.FC = () => {
-  const GAME = games["fuckTheDealer"];
-  const ftdLogic = new FuckTheDealerLogic();
+import Navbar from "../../../Components/Navbar/Navbar";
+import GetIntoGame from "../../../Components/Games/GetIntoGame/GetIntoGame";
+import GameLobby from "../../../Components/Games/Lobby/GameLobby";
+import PlayerList from "./Components/PlayerList";
+import PlayedCards from "./Components/PlayedCards";
+import GuesserOptions from "./Components/GuesserOptions";
+import TurnCounter from "./Components/TurnCounter";
 
+import "./fuckthedealer.css";
+
+const FuckTheDealer: React.FC = () => {
+  // Get the game logic for "Fuck the Dealer"
+  const GAME = games["fuckTheDealer"];
+
+  // Create an instance of the game logic using useMemo to memoize it
+  const ftdLogic = useMemo(() => new FuckTheDealerLogic(), []);
+
+  // Hook to manage socket events and state
   const {
     error,
     message,
@@ -20,100 +30,184 @@ const FuckTheDealer: React.FC = () => {
     player,
     gameLogic,
     roomInfo,
+    resetAll,
     setError,
     setLoading,
     startGame,
     handlePlayerAction,
   } = useGameSocket(ftdLogic);
 
+  // State to track the guessed card and whether the guess is bigger or smaller
   const [guessedCard, setGuessedCard] = useState<number | null>(null);
   const [bigger, setBigger] = useState<boolean>(false);
   const [smaller, setSmaller] = useState<boolean>(false);
 
+  /**
+   * Maps the card value to a number for comparison.
+   * @param value - The card value as a string.
+   * @returns The numeric value of the card.
+   */
   const mapCardValueToNumber = (value: string): number => {
-    if (value === "ACE") return 1;
-    if (value === "JACK") return 11;
-    if (value === "QUEEN") return 12;
-    if (value === "KING") return 13;
-    return parseInt(value, 10);
+    const cardValues: Record<string, number> = {
+      ACE: 1,
+      JACK: 11,
+      QUEEN: 12,
+      KING: 13,
+    };
+    return cardValues[value] || parseInt(value, 10);
   };
 
-  const handleCardClick = (index: number) => {
-    console.log("Card clicked");
-    setGuessedCard(index);
+  /**
+   * Handles the click event for guessing a card.
+   * @param value - The value of the guessed card.
+   */
+  const handleCardClick = (value: number) => {
+    setGuessedCard(value);
     const cardToGuessValue = mapCardValueToNumber(
       gameLogic.deck!.cards[0].value
     );
-    if (gameLogic.guessNumber === 2 && cardToGuessValue !== index) {
-      console.log("TURN OVER 2 wrong guesses");
-      setBigger(false);
-      setSmaller(false);
-      handlePlayerAction("GUESS_WRONG", { value: index });
-    } else if (cardToGuessValue < index) {
-      if (gameLogic.deck.remaining <= 20) {
-        handlePlayerAction("GUESS_WRONG", { value: index });
-      } else {
-        console.log("card to guess is smaller");
-        setBigger(false);
-        setSmaller(true);
-        handlePlayerAction("GUESS_SMALLER", { value: index });
-      }
-    } else if (cardToGuessValue > index) {
-      if (gameLogic.deck.remaining <= 20) {
-        handlePlayerAction("GUESS_WRONG", { value: index });
-      } else {
-        console.log("card to guess is bigger");
-        setBigger(true);
-        setSmaller(false);
-        handlePlayerAction("GUESS_BIGGER", { value: index });
-      }
+    const isGuessCorrect = cardToGuessValue === value;
+
+    if (gameLogic.guessNumber === 2 && !isGuessCorrect) {
+      handleWrongGuess(value);
+    } else if (cardToGuessValue < value) {
+      handleWrongGuess(value, "smaller");
+    } else if (cardToGuessValue > value) {
+      handleWrongGuess(value, "bigger");
     } else {
-      console.log("card to guess is correct");
-      setBigger(false);
-      setSmaller(false);
       handlePlayerAction("GUESS_CORRECT");
+      resetGuessState();
     }
   };
 
-  const isMasked = (index: number): boolean => {
+  /**
+   * Handles wrong guesses and sets state accordingly.
+   * @param value - The value of the guessed card.
+   * @param sizeComparison - The comparison result ("smaller" or "bigger").
+   */
+  const handleWrongGuess = (value: number, sizeComparison: string = "") => {
+    const isLastGuess =
+      gameLogic.deck?.remaining <= 20 || sizeComparison === "";
+    const action = isLastGuess
+      ? "GUESS_WRONG"
+      : `GUESS_${sizeComparison.toUpperCase()}`;
+    handlePlayerAction(action, { value });
+    if (isLastGuess) {
+      sizeComparison = "";
+    }
+    setBigger(sizeComparison === "bigger");
+    setSmaller(sizeComparison === "smaller");
+  };
+
+  /**
+   * Resets the guess state.
+   */
+  const resetGuessState = () => {
+    setBigger(false);
+    setSmaller(false);
+  };
+
+  /**
+   * Checks if the card should be masked based on the current guess state.
+   * @param value - The value of the card.
+   * @returns True if the card should be masked, otherwise false.
+   */
+  const isMasked = (value: number): boolean => {
     if (guessedCard !== null) {
-      if (bigger) {
-        return index <= guessedCard;
-      } else if (smaller) {
-        return index >= guessedCard;
-      }
+      return bigger
+        ? value <= guessedCard
+        : smaller
+        ? value >= guessedCard
+        : false;
     }
     return false;
   };
 
-  const groupCardsByValue = (cards: Card[]): Record<string, Card[]> => {
-    return cards.reduce((acc, card) => {
-      const cardValue = mapCardValueToNumber(card.value);
-      if (!acc[cardValue]) {
-        acc[cardValue] = [];
-      }
-      acc[cardValue].push(card);
-      return acc;
-    }, {} as Record<string, Card[]>);
-  };
+  /**
+   * Groups cards by their values.
+   * @param cards - The array of cards to group.
+   * @returns An object with card values as keys and arrays of cards as values.
+   */
+  const groupCardsByValue = useCallback(
+    (cards: Card[]): Record<string, Card[]> => {
+      return cards.reduce((acc, card) => {
+        const cardValue = mapCardValueToNumber(card.value).toString();
+        if (!acc[cardValue]) {
+          acc[cardValue] = [];
+        }
+        acc[cardValue].push(card);
+        return acc;
+      }, {} as Record<string, Card[]>);
+    },
+    []
+  );
 
+  // Sort and group the cards using useMemo to memoize the result
+  const sortedGroupedCards = useMemo(() => {
+    const groupedCards = gameLogic
+      ? groupCardsByValue(gameLogic.playedCards)
+      : {};
+    return Object.keys(groupedCards)
+      .sort((a, b) => parseInt(a) - parseInt(b))
+      .reduce((acc, key) => {
+        acc[key] = groupedCards[key];
+        return acc;
+      }, {} as Record<string, Card[]>);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameLogic, groupCardsByValue, gameLogic.playedCards.length]);
+
+  // Render loading state
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <>
+        <Navbar text="F*CK THE DEALER" />
+        <main className="center-container">
+          <div className="game-over">Loading ...</div>
+        </main>
+      </>
+    );
   }
 
+  // Render error state
   if (error) {
-    return <div>{error}</div>;
+    return (
+      <>
+        <Navbar text="F*CK THE DEALER" />
+        <main className="center-container">
+          <div className="game-over">{error}</div>
+          <button className="default-btn-style" onClick={resetAll}>
+            PLAY AGAIN
+          </button>
+        </main>
+      </>
+    );
   }
 
-  const sortedGroupedCards = Object.keys(
-    groupCardsByValue(gameLogic?.playedCards || [])
-  )
-    .sort((a, b) => mapCardValueToNumber(a) - mapCardValueToNumber(b))
-    .reduce((acc, key) => {
-      acc[key] = groupCardsByValue(gameLogic?.playedCards || [])[key];
-      return acc;
-    }, {} as Record<string, Card[]>);
+  // Render game over state
+  if (
+    gameLogic &&
+    gameLogic.deck &&
+    gameLogic.deck.remaining === 0 &&
+    gameLogic.deck.cards.length === 0
+  ) {
+    return (
+      <>
+        <Navbar text="F*CK THE DEALER" />
+        <main className="center-container">
+          <div className="game-over">GAME OVER</div>
+          <button className="default-btn-style" onClick={resetAll}>
+            PLAY AGAIN
+          </button>
+        </main>
+      </>
+    );
+  }
+  console.log(`%c${player}`, "color: red");
+  console.log(player);
+  console.log(`%c${gameLogic.dealer}`, "color: green");
+  console.log(gameLogic);
 
+  // Render game components
   return (
     <>
       <Navbar text="F*CK THE DEALER" />
@@ -130,81 +224,34 @@ const FuckTheDealer: React.FC = () => {
           <>
             <p className="ftd-message">{message}</p>
             <div className="ftd-board">
-              <section className="ftd-players">
-                {gameLogic.players.map((mPlayer) => (
-                  <div className="ftd-player" key={mPlayer.socketId}>
-                    <p
-                      className={`ftd-player-name ${
-                        mPlayer.socketId === player.socketId ? "you" : ""
-                      }`}
-                    >
-                      {mPlayer.username}
-                    </p>
-                    {gameLogic.dealer.socketId === mPlayer.socketId ? (
-                      <p className={`ftd-player-turn dealer`}>Dealer</p>
-                    ) : null}
-                    {gameLogic.guesser.socketId === mPlayer.socketId ? (
-                      <p className={`ftd-player-turn guesser`}>Guesser</p>
-                    ) : null}
-                  </div>
-                ))}
-              </section>
-              <section className="ftd-turn-counter">
-                <p>
-                  Wrong guesses: <span>{gameLogic.dealerTurn - 1}/3</span>
-                </p>
-              </section>
-              <section className="ftd-played-cards-container">
-                <p>Played cards:</p>
-                <div className="ftd-played-cards">
-                  {Object.keys(sortedGroupedCards).map((value) => (
-                    <div className="ftd-card-stack" key={value}>
-                      {sortedGroupedCards[value].map(
-                        (card: Card, index: number) => (
-                          <div
-                            className="ftd-card"
-                            key={card.code}
-                            style={{ top: `${index * 25}px` }}
-                          >
-                            <img
-                              src={card.image}
-                              alt={`card-${card.code}`}
-                            ></img>
-                          </div>
-                        )
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </section>
-              {gameLogic.dealer.socketId === player?.socketId ? (
+              <PlayerList
+                players={gameLogic.players}
+                dealer={gameLogic.dealer}
+                guesser={gameLogic.guesser}
+                currentPlayer={player}
+              />
+              <TurnCounter dealerTurn={gameLogic.dealerTurn} />
+              <PlayedCards groupedCards={sortedGroupedCards} />
+              {gameLogic.dealer &&
+              gameLogic.dealer.socketId === player?.socketId ? (
                 <section className="ftd-dealer-card-container">
-                  {gameLogic.deck?.cards?.length === 1 ? (
+                  {gameLogic.deck?.cards?.length === 1 && (
                     <button className="ftd-dealer-card">
                       <img
                         src={gameLogic.deck.cards[0].image}
                         alt="Card to guess"
-                      ></img>
+                      />
                     </button>
-                  ) : null}
+                  )}
                 </section>
               ) : null}
-              {gameLogic.guesser.socketId === player?.socketId ? (
-                <section className="ftd-guesser-card-container">
-                  <p>Guess card number:</p>
-                  <div className="ftd-guesser-options">
-                    {cardsBySuit.H.map((card, index) => (
-                      <button
-                        key={index}
-                        onClick={() => handleCardClick(index + 1)}
-                        className={`${isMasked(index + 1) ? "masked" : ""}`}
-                        disabled={isMasked(index + 1)}
-                      >
-                        <img src={card} alt="card"></img>
-                      </button>
-                    ))}
-                  </div>
-                </section>
+              {gameLogic.guesser &&
+              gameLogic.guesser.socketId === player?.socketId ? (
+                <GuesserOptions
+                  playedCards={sortedGroupedCards}
+                  handleCardClick={handleCardClick}
+                  isMasked={isMasked}
+                />
               ) : null}
             </div>
           </>

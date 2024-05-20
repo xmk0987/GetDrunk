@@ -6,12 +6,22 @@ const {
 } = require("../deckApi/deckApi");
 
 class FuckTheDealerLogic {
+  /**
+   * Initializes a new instance of the FuckTheDealerLogic class.
+   * @param {Object} io - The Socket.IO server instance.
+   * @param {string} roomId - The ID of the room.
+   * @param {Object} socketData - The data structure to store socket and game state information.
+   */
   constructor(io, roomId, socketData) {
     this.io = io;
     this.roomId = roomId;
     this.socketData = socketData; // Store the reference to socketData
   }
 
+  /**
+   * Starts the game by initializing the deck and setting up the game state.
+   * This function is asynchronous and interacts with the deck API.
+   */
   async startGame() {
     console.log(`Fuck the dealer game started in room ${this.roomId}`);
 
@@ -33,10 +43,7 @@ class FuckTheDealerLogic {
         const players = roomData.players;
         const dealerIndex = Math.floor(Math.random() * players.length);
         const dealer = players[dealerIndex];
-        let playerInTurnIndex = dealerIndex + 1;
-        if (playerInTurnIndex >= players.length) {
-          playerInTurnIndex = 0;
-        }
+        let playerInTurnIndex = (dealerIndex + 1) % players.length;
         const playerInTurn = players[playerInTurnIndex];
 
         // Add dealer and player in turn to roomData
@@ -48,6 +55,10 @@ class FuckTheDealerLogic {
     }
   }
 
+  /**
+   * Initializes the game by fetching a new deck and drawing a card.
+   * @returns {Object|null} The deck object if successful, otherwise null.
+   */
   async initializeGame() {
     const newDeck = await getNewDeck();
     if (newDeck.success) {
@@ -58,6 +69,11 @@ class FuckTheDealerLogic {
     }
   }
 
+  /**
+   * Handles player actions based on the action type.
+   * @param {string} action - The action type (e.g., "GUESS_CORRECT", "GUESS_BIGGER").
+   * @param {Object} data - Additional data associated with the action.
+   */
   handlePlayerAction(action, data) {
     console.log(`Fuck the dealer action: ${action}`);
     console.log("data here ", data);
@@ -75,15 +91,19 @@ class FuckTheDealerLogic {
         console.log("GUESS SMALLER");
         this.handleGuessSmaller(data);
         break;
-      // Add more cases for different action types as needed
       case "GUESS_WRONG":
         console.log("GUESS WRONG");
         this.handleGuessWrong(data);
+        break;
       default:
         console.log(`Unknown action type: ${action}`);
     }
   }
 
+  /**
+   * Handles the action when the player's guess is smaller than the target card.
+   * @param {Object} data - Data associated with the action.
+   */
   async handleGuessSmaller(data) {
     console.log(data.data.value);
     this.socketData[this.roomId].game.guessNumber = 2;
@@ -96,6 +116,10 @@ class FuckTheDealerLogic {
     });
   }
 
+  /**
+   * Handles the action when the player's guess is bigger than the target card.
+   * @param {Object} data - Data associated with the action.
+   */
   async handleGuessBigger(data) {
     console.log(data.data.value);
     this.socketData[this.roomId].game.guessNumber = 2;
@@ -108,6 +132,9 @@ class FuckTheDealerLogic {
     });
   }
 
+  /**
+   * Handles the action when the player's guess is correct.
+   */
   async handleGuessCorrect() {
     const deckId = this.socketData[this.roomId].game.deck.deck_id;
     const guessedCard = this.socketData[this.roomId].game.deck.cards[0];
@@ -143,6 +170,10 @@ class FuckTheDealerLogic {
     }
   }
 
+  /**
+   * Handles the action when the player's guess is wrong.
+   * @param {Object} data - Data associated with the action.
+   */
   async handleGuessWrong(data) {
     const deckId = this.socketData[this.roomId].game.deck.deck_id;
     const card = this.socketData[this.roomId].game.deck.cards[0];
@@ -162,7 +193,7 @@ class FuckTheDealerLogic {
       if (this.socketData[this.roomId].game.dealerTurn === 3) {
         this.changeDealer();
         this.socketData[this.roomId].game.dealerTurn = 1;
-        message += " " + "Dealer changes.";
+        message += " Dealer changes.";
       } else {
         this.socketData[this.roomId].game.dealerTurn++;
       }
@@ -178,6 +209,9 @@ class FuckTheDealerLogic {
     }
   }
 
+  /**
+   * Changes the current guesser to the next player in line.
+   */
   changeGuesser() {
     const roomData = this.socketData[this.roomId];
     const players = roomData.players;
@@ -196,6 +230,9 @@ class FuckTheDealerLogic {
     roomData.game.guesser = players[newGuesserIndex];
   }
 
+  /**
+   * Changes the current dealer to the next player in line.
+   */
   changeDealer() {
     const roomData = this.socketData[this.roomId];
     const players = roomData.players;
@@ -214,6 +251,11 @@ class FuckTheDealerLogic {
     roomData.game.dealer = players[newDealerIndex];
   }
 
+  /**
+   * Maps card values to their respective numbers.
+   * @param {string} value - The card value as a string (e.g., "ACE", "KING").
+   * @returns {number} The numerical value of the card.
+   */
   mapCardValueToNumber(value) {
     if (value === "ACE") return 1;
     if (value === "JACK") return 11;

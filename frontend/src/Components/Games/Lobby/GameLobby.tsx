@@ -4,12 +4,12 @@ import { IonIcon } from "@ionic/react";
 import { personCircleOutline } from "ionicons/icons";
 
 import "./lobby.css";
-import { GameData, RoomData } from "../../../utils/types/types";
+import { Game, RoomData } from "../../../utils/types/types";
 
 interface GameLobbyProps {
   roomId: string | null;
   player: any;
-  gameData: GameData;
+  gameData: Game;
   roomData: RoomData;
   onStartGame: () => void;
 }
@@ -29,7 +29,7 @@ const GameLobby: React.FC<GameLobbyProps> = ({
             <div
               key={index}
               className={`player ${
-                player?.username === mPlayer.username ? "accent-3-bg" : ""
+                player?.socketId === mPlayer.socketId ? "accent-3-bg" : ""
               }`}
             >
               {mPlayer.username}
@@ -58,7 +58,7 @@ const GameLobby: React.FC<GameLobbyProps> = ({
           <button
             className="default-btn-style"
             onClick={onStartGame}
-            /* disabled={roomData.players.length < gameData.minPlayers} */
+            disabled={roomData.players.length < gameData.minPlayers}
           >
             START
           </button>

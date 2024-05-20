@@ -1,24 +1,37 @@
 import { Socket } from "socket.io-client";
+import { RoomData, Player } from "../types/types";
 
+/**
+ * Class representing the game logic for "Fuck the Dealer".
+ */
 export class FuckTheDealerLogic {
   status: string = "choose";
   deck: any = null;
-  dealer: any = null;
-  guesser: any = null;
+  dealer: Player | null = null;
+  guesser: Player | null = null;
   dealerTurn: number = 0;
   guessNumber: number = 1;
   admin: string | null = null;
-  players: Array<any> = [];
+  players: Array<Player> = [];
   roomId: string | null = null;
   playedCards: Array<any> = [];
 
+  /**
+   * Starts the game by emitting a "start-game" event.
+   * @param {Socket} socket - The socket instance to emit the event.
+   * @param {string} roomId - The ID of the room where the game is started.
+   */
   startGame(socket: Socket, roomId: string) {
     console.log("send start game");
     socket.emit("start-game", roomId);
     console.log("Fuck the dealer game started!");
   }
 
-  setGameData(data: any) {
+  /**
+   * Sets the game data using the provided room data.
+   * @param {RoomData} data - The room data containing game information.
+   */
+  setGameData(data: RoomData) {
     console.log("Game set with data:", data);
     const {
       status,
@@ -41,6 +54,13 @@ export class FuckTheDealerLogic {
     this.playedCards = playedCards;
   }
 
+  /**
+   * Handles player actions by emitting an appropriate event with the action and optional data.
+   * @param {string} action - The action type.
+   * @param {Socket} socket - The socket instance to emit the event.
+   * @param {string | null} roomId - The ID of the room where the action is performed.
+   * @param {any} [data] - Additional data for the action, if any.
+   */
   handlePlayerAction(
     action: string,
     socket: Socket,
@@ -48,10 +68,27 @@ export class FuckTheDealerLogic {
     data?: any
   ) {
     console.log(`Fuck the dealer player action: ${action}`);
+    const payload: any = { action, roomId };
     if (data !== undefined && data !== null) {
-      socket.emit("player-action", { action, roomId, data });
-    } else {
-      socket.emit("player-action", { action, roomId });
+      payload.data = data;
     }
+    socket.emit("player-action", payload);
+  }
+
+  /**
+   * Resets the game to its initial state.
+   */
+  resetGame() {
+    this.status = "choose";
+    this.deck = null;
+    this.dealer = null;
+    this.guesser = null;
+    this.dealerTurn = 0;
+    this.guessNumber = 1;
+    this.admin = null;
+    this.players = [];
+    this.roomId = null;
+    this.playedCards = [];
+    console.log("Game has been reset to initial state.");
   }
 }

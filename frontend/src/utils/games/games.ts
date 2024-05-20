@@ -9,17 +9,7 @@ import drunkPokerImage from "../images/games/sipPoker.webp";
 import biggerCardImage from "../images/games/biggerCard.webp";
 import drunkDealerImage from "../images/games/drunkDealer.webp";
 
-// Define the interface for each game's properties
-export interface Game {
-  name: string;
-  image: string;
-  desc: string;
-  minPlayers: number;
-  maxPlayers: number;
-  route: string;
-  rules: string[];
-}
-
+import { Game } from "../types/types";
 // Define an interface for the complete games object
 export interface Games {
   [key: string]: Game;
