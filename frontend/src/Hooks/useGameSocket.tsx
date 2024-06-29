@@ -1,14 +1,13 @@
 import { useEffect, useState, useCallback } from "react";
 import { useSocket } from "../Providers/SocketContext";
-import { Player, RoomData } from "../utils/types/types";
-import { FuckTheDealerLogic } from "../utils/gameLogics/fuckTheDealerLogic";
+import { Player } from "../utils/types/types";
 
 /**
  * Custom hook to manage the game socket and game state.
  * @param initialGameLogic - The initial game logic object.
  * @returns An object containing various game states and functions to manage the game.
  */
-export const useGameSocket = (initialGameLogic: FuckTheDealerLogic) => {
+export const useGameSocket = (initialGameLogic: any) => {
   const { socket } = useSocket();
 
   const [message, setMessage] = useState<string>("");
@@ -20,12 +19,12 @@ export const useGameSocket = (initialGameLogic: FuckTheDealerLogic) => {
     return savedPlayer ? JSON.parse(savedPlayer) : null;
   });
 
-  const [roomInfo, setRoomInfo] = useState<RoomData | null>(() => {
+  const [roomInfo, setRoomInfo] = useState<any>(() => {
     const savedRoomInfo = sessionStorage.getItem("roomInfo");
     return savedRoomInfo ? JSON.parse(savedRoomInfo) : null;
   });
 
-  const [gameLogic] = useState<FuckTheDealerLogic>(initialGameLogic);
+  const [gameLogic] = useState<any>(initialGameLogic);
 
   // Save roomInfo to session storage whenever it changes
   useEffect(() => {
@@ -53,7 +52,6 @@ export const useGameSocket = (initialGameLogic: FuckTheDealerLogic) => {
      * Handle socket connection.
      */
     const handleConnect = () => {
-      console.log(`You connected with id: ${socket.id}`);
       const savedRoomInfo = sessionStorage.getItem("roomInfo");
       const savedPlayer = sessionStorage.getItem("player");
       if (savedRoomInfo && savedPlayer) {
@@ -68,7 +66,6 @@ export const useGameSocket = (initialGameLogic: FuckTheDealerLogic) => {
      * @param message - The error message.
      */
     const handleError = (message: string) => {
-      console.log("Error occurred", message);
       setLoading(false);
       setError(message);
     };
@@ -78,7 +75,6 @@ export const useGameSocket = (initialGameLogic: FuckTheDealerLogic) => {
      * @param data - The room data.
      */
     const handleRoomCreated = (data: any) => {
-      console.log("Room created, received information", data);
       const { roomData, player } = data;
       setRoomInfo(roomData);
       setPlayer(player);
@@ -90,13 +86,11 @@ export const useGameSocket = (initialGameLogic: FuckTheDealerLogic) => {
      * @param data - The room data.
      */
     const handleRoomJoined = (data: any) => {
-      console.log("Room joined, received information", data);
       const { roomData, player } = data;
       setRoomInfo(roomData);
       setPlayer(player);
       setLoading(false);
       if (roomData.game.status === "playing") {
-        console.log("setting new game data to player");
         gameLogic.setGameData(roomData);
       }
     };
@@ -106,8 +100,7 @@ export const useGameSocket = (initialGameLogic: FuckTheDealerLogic) => {
      * @param player - The new player data.
      */
     const handleNewPlayer = (player: Player) => {
-      console.log("New player joined", player.username);
-      setRoomInfo((prevRoomInfo) => {
+      setRoomInfo((prevRoomInfo: { players: any }) => {
         if (!prevRoomInfo) return null;
         return {
           ...prevRoomInfo,
@@ -118,10 +111,9 @@ export const useGameSocket = (initialGameLogic: FuckTheDealerLogic) => {
 
     /**
      * Handle game start.
-     * @param data - The game data.
+     * @param data - The room data.
      */
     const handleGameStarted = (data: any) => {
-      console.log("Game started with data:", data);
       setMessage("");
       gameLogic.setGameData(data);
       setRoomInfo(data);
@@ -129,11 +121,11 @@ export const useGameSocket = (initialGameLogic: FuckTheDealerLogic) => {
 
     /**
      * Handle next turn.
-     * @param data - The turn data.
+     * @param data - The room data.
      */
     const handleNextTurn = (data: any) => {
-      console.log("Next turn starting", data);
       const { message, gameData } = data;
+      console.log("RECEIVED NEW GAME DATA: ", data.gameData);
       setRoomInfo(gameData);
       setMessage(message);
       gameLogic.setGameData(gameData);
@@ -141,24 +133,32 @@ export const useGameSocket = (initialGameLogic: FuckTheDealerLogic) => {
 
     /**
      * Handle guess again.
-     * @param data - The guess data.
+     * @param data - The room data.
      */
-    const handleGuessAgain = (data: any) => {
-      console.log("Guess again", data);
-      const { message, gameData } = data;
-      setRoomInfo(gameData);
-      setMessage(message);
-      gameLogic.setGameData(gameData);
-    };
-
     const handleRejoin = (data: any) => {
-      console.log("Player rejoined");
       const { roomData } = data;
       setRoomInfo(roomData);
       if (roomData.game.status === "playing") {
-        console.log("Game data changed");
         gameLogic.setGameData(roomData);
       }
+    };
+
+    const handleReadyPlayer = (data: any) => {
+      setRoomInfo((prevRoomInfo: { game: { readyPlayers: any } }) => {
+        // Make sure to access the current readyPlayers array correctly
+        const updatedReadyPlayers = data;
+
+        // Return the new state with the updated readyPlayers array
+        return {
+          ...prevRoomInfo,
+          game: {
+            ...prevRoomInfo.game,
+            readyPlayers: updatedReadyPlayers,
+          },
+        };
+      });
+
+      gameLogic.setReadyPlayers(data);
     };
 
     socket.on("connect", handleConnect);
@@ -168,8 +168,8 @@ export const useGameSocket = (initialGameLogic: FuckTheDealerLogic) => {
     socket.on("new-player", handleNewPlayer);
     socket.on("game-started", handleGameStarted);
     socket.on("next-turn", handleNextTurn);
-    socket.on("guess-again", handleGuessAgain);
     socket.on("player-rejoined", handleRejoin);
+    socket.on("ready-players-updated", handleReadyPlayer);
 
     return () => {
       socket.off("connect", handleConnect);
@@ -179,7 +179,7 @@ export const useGameSocket = (initialGameLogic: FuckTheDealerLogic) => {
       socket.off("new-player", handleNewPlayer);
       socket.off("game-started", handleGameStarted);
       socket.off("next-turn", handleNextTurn);
-      socket.off("guess-again", handleGuessAgain);
+      socket.off("ready-players-updated", handleReadyPlayer);
     };
   }, [socket, gameLogic]);
 
@@ -197,19 +197,19 @@ export const useGameSocket = (initialGameLogic: FuckTheDealerLogic) => {
    * @param action - The action type.
    * @param data - Additional data for the action.
    */
+  // Using a callback to handle player actions
   const handlePlayerAction = useCallback(
     (action: string, data?: any) => {
       if (roomInfo?.roomId && socket) {
-        if (data !== undefined && data !== null) {
-          gameLogic.handlePlayerAction(action, socket, roomInfo.roomId, data);
-        } else {
-          gameLogic.handlePlayerAction(action, socket, roomInfo.roomId);
-        }
+        socket.emit("player-action", {
+          action,
+          roomId: roomInfo.roomId,
+          ...data,
+        });
       }
     },
-    [roomInfo, socket, gameLogic]
+    [roomInfo, socket]
   );
-
   /**
    * Resets all game states and clears session storage.
    */

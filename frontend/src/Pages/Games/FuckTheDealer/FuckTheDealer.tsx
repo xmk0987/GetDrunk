@@ -12,6 +12,12 @@ import PlayerList from "./Components/PlayerList";
 import PlayedCards from "./Components/PlayedCards";
 import GuesserOptions from "./Components/GuesserOptions";
 import TurnCounter from "./Components/TurnCounter";
+import RulesPopup from "../../../Components/Rules/RulesPopup";
+
+import {
+  mapCardValueToNumber,
+  groupCardsByValue,
+} from "../../../utils/helperFunctions";
 
 import "./fuckthedealer.css";
 
@@ -41,21 +47,6 @@ const FuckTheDealer: React.FC = () => {
   const [guessedCard, setGuessedCard] = useState<number | null>(null);
   const [bigger, setBigger] = useState<boolean>(false);
   const [smaller, setSmaller] = useState<boolean>(false);
-
-  /**
-   * Maps the card value to a number for comparison.
-   * @param value - The card value as a string.
-   * @returns The numeric value of the card.
-   */
-  const mapCardValueToNumber = (value: string): number => {
-    const cardValues: Record<string, number> = {
-      ACE: 1,
-      JACK: 11,
-      QUEEN: 12,
-      KING: 13,
-    };
-    return cardValues[value] || parseInt(value, 10);
-  };
 
   /**
    * Handles the click event for guessing a card.
@@ -123,25 +114,6 @@ const FuckTheDealer: React.FC = () => {
     return false;
   };
 
-  /**
-   * Groups cards by their values.
-   * @param cards - The array of cards to group.
-   * @returns An object with card values as keys and arrays of cards as values.
-   */
-  const groupCardsByValue = useCallback(
-    (cards: Card[]): Record<string, Card[]> => {
-      return cards.reduce((acc, card) => {
-        const cardValue = mapCardValueToNumber(card.value).toString();
-        if (!acc[cardValue]) {
-          acc[cardValue] = [];
-        }
-        acc[cardValue].push(card);
-        return acc;
-      }, {} as Record<string, Card[]>);
-    },
-    []
-  );
-
   // Sort and group the cards using useMemo to memoize the result
   const sortedGroupedCards = useMemo(() => {
     const groupedCards = gameLogic
@@ -160,7 +132,7 @@ const FuckTheDealer: React.FC = () => {
   if (loading) {
     return (
       <>
-        <Navbar text="F*CK THE DEALER" />
+        <Navbar text="F*CK THE DEALER" header={true} />
         <main className="center-container">
           <div className="game-over">Loading ...</div>
         </main>
@@ -172,7 +144,7 @@ const FuckTheDealer: React.FC = () => {
   if (error) {
     return (
       <>
-        <Navbar text="F*CK THE DEALER" />
+        <Navbar text="F*CK THE DEALER" header={true} />
         <main className="center-container">
           <div className="game-over">{error}</div>
           <button className="default-btn-style" onClick={resetAll}>
@@ -192,7 +164,7 @@ const FuckTheDealer: React.FC = () => {
   ) {
     return (
       <>
-        <Navbar text="F*CK THE DEALER" />
+        <Navbar text="F*CK THE DEALER" header={true} />
         <main className="center-container">
           <div className="game-over">GAME OVER</div>
           <button className="default-btn-style" onClick={resetAll}>
@@ -202,15 +174,11 @@ const FuckTheDealer: React.FC = () => {
       </>
     );
   }
-  console.log(`%c${player}`, "color: red");
-  console.log(player);
-  console.log(`%c${gameLogic.dealer}`, "color: green");
-  console.log(gameLogic);
 
   // Render game components
   return (
     <>
-      <Navbar text="F*CK THE DEALER" />
+      <Navbar text="F*CK THE DEALER" header={true} />
       <main className="ftd-container">
         {roomInfo?.game.status === "lobby" ? (
           <GameLobby
@@ -222,7 +190,7 @@ const FuckTheDealer: React.FC = () => {
           />
         ) : gameLogic && gameLogic.status === "playing" ? (
           <>
-            <p className="ftd-message">{message}</p>
+            <p className="game-message">{message}</p>
             <div className="ftd-board">
               <PlayerList
                 players={gameLogic.players}
@@ -262,6 +230,7 @@ const FuckTheDealer: React.FC = () => {
             game_name={GAME.route}
           />
         )}
+        <RulesPopup header={GAME.name} rules={GAME.rules} />
       </main>
     </>
   );

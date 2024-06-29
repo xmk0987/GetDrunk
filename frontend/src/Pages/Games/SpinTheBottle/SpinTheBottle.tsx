@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./spinthebottle.css";
 
 // Assuming the path and imports are correct and the images are module declared.
-import bottle from "../../../utils/images/gambina.png";
+import bottle from "../../../utils/images/games/gambina.png";
 
 // Type definitions for games should ideally be defined where the games object is declared.
 // Assuming it's correctly imported with its types.

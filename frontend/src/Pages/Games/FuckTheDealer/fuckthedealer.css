@@ -46,13 +46,6 @@
   color: red;
 }
 
-.ftd-message {
-  font-size: 30px;
-  padding: 5px;
-  color: white;
-  text-shadow: var(--text-shadow);
-}
-
 .guesser {
   color: white;
   text-shadow: var(--text-shadow);
@@ -107,9 +100,6 @@
   left: 0;
 }
 
-.masked {
-  filter: grayscale(100%) opacity(0.5); /* Example: grayscale and semi-transparent */
-}
 
 /* Offset each subsequent image to the right */
 .ftd-card img:nth-child(2) {
@@ -164,4 +154,3 @@
   width: 75px;
   height: auto;
 }
-

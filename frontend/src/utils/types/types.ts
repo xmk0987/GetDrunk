@@ -1,3 +1,4 @@
+import { Socket } from "socket.io-client";
 // types.ts
 export interface Card {
   code: string;
@@ -26,14 +27,7 @@ export interface GameData {
   playedCards: Array<any>;
 }
 
-export interface RoomData {
-  roomId: string;
-  admin: string;
-  players: Array<Player>;
-  game: GameData;
-}
-
-export interface GameLogic {
+export interface FtdGameLogic {
   status: string;
   players: Player[];
   dealer: Player | null;
@@ -53,4 +47,8 @@ export interface Game {
   maxPlayers: number;
   route: string;
   rules: string[];
+}
+
+export interface IconProps {
+  size: number;
 }

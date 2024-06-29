@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Game } from "../../../utils/games/games.ts";
-import { IonIcon } from "@ionic/react";
-import { personCircleOutline } from "ionicons/icons";
+import { Game } from "../../../utils/types/types.ts";
 
 import RulesOnly from "../../../Components/Rules/RulesOnly.tsx";
 import "./gamecard.css";
+import { useNavigate } from "react-router-dom";
+import GroupIcon from "../../../utils/icons/GroupIcon.tsx";
 
 interface GameCardProps {
   game: Game;
@@ -12,6 +12,12 @@ interface GameCardProps {
 
 const GameCard: React.FC<GameCardProps> = ({ game }) => {
   const [showRules, setShowRules] = useState<boolean>(false);
+
+  const navigate = useNavigate();
+
+  const handleNavigate = () => {
+    navigate("/games/" + game.route);
+  };
 
   const toggleRules = (): void => {
     setShowRules(!showRules);
@@ -33,14 +39,14 @@ const GameCard: React.FC<GameCardProps> = ({ game }) => {
           </>
         )}
       </div>
-      <button className="game-card-button" onClick={toggleRules}></button>
+      <button className="game-card-button" onClick={handleNavigate}></button>
       <div className="game-card-rules-container">
         <div className="game-card-players">
           <p>
             {game.minPlayers} -{" "}
             {game.maxPlayers === Infinity ? "∞" : game.maxPlayers}
           </p>
-          <IonIcon icon={personCircleOutline} />
+          <GroupIcon size={20} />
         </div>
         <button className="game-card-rule-button" onClick={toggleRules}>
           {showRules ? "CLOSE RULES" : "RULES"}

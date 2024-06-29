@@ -1,5 +1,5 @@
 import { Socket } from "socket.io-client";
-import { RoomData, Player } from "../types/types";
+import { Player } from "../types/types";
 
 /**
  * Class representing the game logic for "Fuck the Dealer".
@@ -22,7 +22,6 @@ export class FuckTheDealerLogic {
    * @param {string} roomId - The ID of the room where the game is started.
    */
   startGame(socket: Socket, roomId: string) {
-    console.log("send start game");
     socket.emit("start-game", roomId);
     console.log("Fuck the dealer game started!");
   }
@@ -31,7 +30,7 @@ export class FuckTheDealerLogic {
    * Sets the game data using the provided room data.
    * @param {RoomData} data - The room data containing game information.
    */
-  setGameData(data: RoomData) {
+  setGameData(data: any) {
     console.log("Game set with data:", data);
     const {
       status,
@@ -55,27 +54,6 @@ export class FuckTheDealerLogic {
   }
 
   /**
-   * Handles player actions by emitting an appropriate event with the action and optional data.
-   * @param {string} action - The action type.
-   * @param {Socket} socket - The socket instance to emit the event.
-   * @param {string | null} roomId - The ID of the room where the action is performed.
-   * @param {any} [data] - Additional data for the action, if any.
-   */
-  handlePlayerAction(
-    action: string,
-    socket: Socket,
-    roomId: string | null,
-    data?: any
-  ) {
-    console.log(`Fuck the dealer player action: ${action}`);
-    const payload: any = { action, roomId };
-    if (data !== undefined && data !== null) {
-      payload.data = data;
-    }
-    socket.emit("player-action", payload);
-  }
-
-  /**
    * Resets the game to its initial state.
    */
   resetGame() {
@@ -90,5 +68,9 @@ export class FuckTheDealerLogic {
     this.roomId = null;
     this.playedCards = [];
     console.log("Game has been reset to initial state.");
+  }
+
+  setHand() {
+    return;
   }
 }

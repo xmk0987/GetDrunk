@@ -52,7 +52,7 @@ const GetIntoGame: React.FC<{
   };
 
   return (
-    <main className="getintogame-container">
+    <div className="getintogame-container">
       <div className="getintogame-options">
         {view === "create" ? (
           <div className="getintogame-join-popup">
@@ -111,7 +111,7 @@ const GetIntoGame: React.FC<{
           </>
         )}
       </div>
-    </main>
+    </div>
   );
 };
 

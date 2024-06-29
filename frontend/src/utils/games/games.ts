@@ -52,7 +52,7 @@ export const games: Games = {
       "When 1/3 of the pack is left you can remove the second guess option if you like.",
     ],
   },
-  bussdriver: {
+  bussDriver: {
     name: "BUSS DRIVER",
     image: bussDriverImage,
     desc: "Can you drive the bus? Hopefully you don't have to.",

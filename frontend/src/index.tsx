@@ -1,17 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
 
 import "./index.css";
 
-import App from "./App.tsx"; // Remove the .tsx extension in the import
-import reportWebVitals from "./reportWebVitals"; // Remove the .js extension
-import { addIcons } from "ionicons";
-import { personCircleOutline } from "ionicons/icons";
-
-// Register Ionicons
-addIcons({
-  "person-circle-outline": personCircleOutline,
-});
+import App from "./App.tsx";
+import reportWebVitals from "./reportWebVitals";
 
 // Get the element with the ID 'root'
 const rootElement = document.getElementById("root");
@@ -23,7 +17,9 @@ const root = ReactDOM.createRoot(rootElement);
 // Render the App component into the root
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>
 );
 

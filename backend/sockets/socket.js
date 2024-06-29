@@ -1,6 +1,7 @@
 const { Server } = require("socket.io");
 const { nanoid } = require("nanoid");
 const FuckTheDealerLogic = require("../gamesLogic/FuckTheDealerLogic");
+const BussDriverLogic = require("../gamesLogic/BussDriverLogic");
 
 const socketData = {}; // Stores information about each room
 const socketIdToUsername = {}; // Maps socket IDs to usernames
@@ -39,7 +40,7 @@ function initializeSocket(server, options) {
           status: "lobby",
         },
         players: [{ socketId: socket.id, username }],
-        admin: socket.id,
+        admin: username,
         roomId: roomId,
       };
 
@@ -87,26 +88,20 @@ function initializeSocket(server, options) {
         const existingPlayer = socketData[roomId].players.find(
           (p) => p.username === player.username // Match player by username instead of socket ID
         );
-        console.log("Socket data", socketData[roomId]);
-        console.log("New player", player);
-        console.log("Existing player", existingPlayer);
         if (existingPlayer) {
           existingPlayer.socketId = socket.id; // Update the socket ID for the rejoining player
-
-          // Update game state references for dealer and guesser
-          if (
-            socketData[roomId].game.dealer &&
-            socketData[roomId].game.dealer.username === player.username
-          ) {
-            console.log("Player was dealer");
-            socketData[roomId].game.dealer.socketId = socket.id;
-          }
-          if (
-            socketData[roomId].game.guesser &&
-            socketData[roomId].game.guesser.username === player.username
-          ) {
-            console.log("Player was guesser");
-            socketData[roomId].game.guesser.socketId = socket.id;
+          switch (socketData[roomId].game.name) {
+            case "fuckTheDealer":
+              const ftdLogic = new FuckTheDealerLogic(io, roomId, socketData);
+              ftdLogic.rejoinGame(player, socket);
+              break;
+            case "bussDriver":
+              const bdLogic = new BussDriverLogic(io, roomId, socketData);
+              bdLogic.rejoinGame(player, socket);
+              break;
+            default:
+              console.log(`Unknown game: ${socketData[roomId].game.name}`);
+              break;
           }
         } else {
           // If player is not found, add them to the players list
@@ -119,7 +114,7 @@ function initializeSocket(server, options) {
 
         // Clear the timeout if the user reconnects
         if (userTimeouts[socket.id]) {
-          console.log("time oout cleared");
+          console.log("time out cleared");
           clearTimeout(userTimeouts[socket.id]);
           delete userTimeouts[socket.id];
         }
@@ -143,12 +138,16 @@ function initializeSocket(server, options) {
      * @param {string} roomId - The ID of the room where the game is started.
      */
     socket.on("start-game", (roomId) => {
+      console.log("new game", roomId);
       if (socketData[roomId]) {
-        console.log("Starting game");
         switch (socketData[roomId].game.name) {
           case "fuckTheDealer":
             const ftdLogic = new FuckTheDealerLogic(io, roomId, socketData);
             ftdLogic.startGame();
+            break;
+          case "bussDriver":
+            const bdLogic = new BussDriverLogic(io, roomId, socketData);
+            bdLogic.startGame();
             break;
           default:
             console.log(`Unknown game: ${socketData[roomId].game.name}`);
@@ -163,15 +162,22 @@ function initializeSocket(server, options) {
      * Handles player actions within the game.
      * @param {Object} data - Data containing the action, room ID, and any extra data.
      */
+    // Handling player actions on the server
     socket.on("player-action", (data) => {
-      const { action, roomId, ...extraData } = data; // Destructure action, roomId and extra data
+      const { action, roomId, ...extraData } = data; // Destructure action, roomId, and extra data
       if (socketData[roomId]) {
         console.log(`Action received: ${action} for room: ${roomId}`);
+        console.log("GAME: ", socketData[roomId].game.name);
         switch (socketData[roomId].game.name) {
           case "fuckTheDealer":
             const ftdLogic = new FuckTheDealerLogic(io, roomId, socketData);
             ftdLogic.handlePlayerAction(action, extraData); // Pass extra data to the game logic
             break;
+          case "bussDriver": {
+            const bdLogic = new BussDriverLogic(io, roomId, socketData);
+            bdLogic.handlePlayerAction(action, extraData);
+            break;
+          }
           default:
             console.log(`Unknown game: ${socketData[roomId].game.name}`);
             break;

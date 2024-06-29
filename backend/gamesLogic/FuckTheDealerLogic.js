@@ -105,12 +105,11 @@ class FuckTheDealerLogic {
    * @param {Object} data - Data associated with the action.
    */
   async handleGuessSmaller(data) {
-    console.log(data.data.value);
     this.socketData[this.roomId].game.guessNumber = 2;
     const message = `${
       this.socketData[this.roomId].game.guesser.username
     } guessed ${data.data.value}. The card is smaller.`;
-    this.io.to(this.roomId).emit("guess-again", {
+    this.io.to(this.roomId).emit("next-turn", {
       gameData: this.socketData[this.roomId],
       message,
     });
@@ -121,12 +120,11 @@ class FuckTheDealerLogic {
    * @param {Object} data - Data associated with the action.
    */
   async handleGuessBigger(data) {
-    console.log(data.data.value);
     this.socketData[this.roomId].game.guessNumber = 2;
     const message = `${
       this.socketData[this.roomId].game.guesser.username
     } guessed ${data.data.value}. The card is bigger.`;
-    this.io.to(this.roomId).emit("guess-again", {
+    this.io.to(this.roomId).emit("next-turn", {
       gameData: this.socketData[this.roomId],
       message,
     });
@@ -249,6 +247,24 @@ class FuckTheDealerLogic {
     );
 
     roomData.game.dealer = players[newDealerIndex];
+  }
+
+  rejoinGame(player, socket) {
+    // Update game state references for dealer and guesser
+    if (
+      this.socketData[this.roomId].game.dealer &&
+      this.socketData[this.roomId].game.dealer.username === player.username
+    ) {
+      console.log("Player was dealer");
+      this.socketData[this.roomId].game.dealer.socketId = socket.id;
+    }
+    if (
+      this.socketData[this.roomId].game.guesser &&
+      this.socketData[this.roomId].game.guesser.username === player.username
+    ) {
+      console.log("Player was guesser");
+      this.socketData[this.roomId].game.guesser.socketId = socket.id;
+    }
   }
 
   /**

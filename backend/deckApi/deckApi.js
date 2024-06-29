@@ -1,80 +1,135 @@
 const axios = require("axios");
 
+const baseURL = "https://deckofcardsapi.com/api/deck/";
 
-/**
- * Fetch a new deck from the deck of cards api.
- * @returns - Returns the new deck object
- */
+// Axios instance with base URL
+const axiosInstance = axios.create({
+  baseURL,
+});
+
+// Function to handle API request and response
+const handleRequest = async (requestPromise) => {
+  try {
+    const response = await requestPromise;
+    return response.data;
+  } catch (error) {
+    throw error; // Throw the error for handling in the caller function
+  }
+};
+
+// Fetch a new deck from the deck of cards API
 const getNewDeck = async () => {
   try {
-    const response = await axios.get(
-      "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1"
+    const response = await handleRequest(
+      axiosInstance.get("new/shuffle/?deck_count=1")
     );
-    /* const response = await axios.get(
-      "https://deckofcardsapi.com/api/deck/new/shuffle/?cards=AS,2S,KS"
-    ); */
-    return response.data;
+    return response;
   } catch (error) {
-    console.log(error);
-    return null; // Return null in case of an error
+    throw error;
   }
 };
 
-/**
- * Fetch a new deck from the deck of cards api.
- * @param deckId - The id of the deck we want to draw a card from
- * @param count - How many cards to draw
- * @returns - Returns the deck object with the cards key with the drawn card
- */
+// Draw a card from a deck
 const drawACard = async (deckId, count = 1) => {
   try {
-    const response = await axios.get(
-      `https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=${count}`
+    const response = await handleRequest(
+      axiosInstance.get(`${deckId}/draw/?count=${count}`)
     );
-    return response.data;
+    return response;
   } catch (error) {
-    console.log(error);
-    return null; // Return null in case of an error
+    throw error;
   }
 };
 
-
-/**
- * Add a card to a pile
- * @param deckId - The id of the deck we want to draw a card from
- * @param pileName - What pile to add a card to, if its non existent creates new pile otherwise adds to existing pile
- * @param card - Which card value to add to pile
- * @returns - Returns the deck object with the piles
- */
+// Add a card to a pile
 const addToPile = async (deckId, pileName, card) => {
   try {
-    const response = await axios.get(
-      `https://deckofcardsapi.com/api/deck/${deckId}/pile/${pileName}/add/?cards=${card}`
+    const response = await handleRequest(
+      axiosInstance.get(`${deckId}/pile/${pileName}/add/?cards=${card}`)
     );
-    return response.data;
+    return response;
   } catch (error) {
-    console.log(error);
-    return null; // Return null in case of an error
+    throw error;
   }
 };
 
-
-/**
- * List all the cards in a pile
- * @param deckId - The id of the deck we want to draw a card from
- * @param pileName - What pile to list.
- * @returns - Returns the deck object with the cards and piles and the cards in the given pile.
- */
+// List all the cards in a pile
 const listPileCards = async (deckId, pileName) => {
   try {
-    const response = await axios.get(
-      `https://deckofcardsapi.com/api/deck/${deckId}/pile/${pileName}/list/`
+    const response = await handleRequest(
+      axiosInstance.get(`${deckId}/pile/${pileName}/list/`)
     );
-    return response.data;
+    return response;
   } catch (error) {
-    console.log(error);
-    return null; // Return null in case of an error
+    throw error;
   }
 };
 
-module.exports = { getNewDeck, drawACard, addToPile, listPileCards };
+// Draw a specific card from a pile
+const drawFromPile = async (deckId, pileName, cardCode) => {
+  try {
+    const response = await handleRequest(
+      axiosInstance.get(`${deckId}/pile/${pileName}/draw/?cards=${cardCode}`)
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Discard a card into the discard pile
+const discardCard = async (deckId, card) => {
+  return await addToPile(deckId, "discard", card);
+};
+
+// Shuffle the deck
+const shuffleDeck = async (deckId) => {
+  try {
+    const response = await handleRequest(
+      axiosInstance.post(`${deckId}/shuffle/`)
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Return a pile to the deck and shuffle
+const returnPileToDeck = async (deckId, pileName) => {
+  try {
+    const response = await handleRequest(
+      axiosInstance.post(`${deckId}/pile/${pileName}/return`)
+    );
+    if (response.success) {
+      return await shuffleDeck(deckId);
+    }
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const returnAllCardsToDeck = async (deckId) => {
+  try {
+    const response = await handleRequest(
+      axiosInstance.post(`${deckId}/return`)
+    );
+    if (response.success) {
+      return await shuffleDeck(deckId);
+    }
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = {
+  getNewDeck,
+  drawACard,
+  addToPile,
+  listPileCards,
+  drawFromPile,
+  discardCard,
+  returnPileToDeck,
+  returnAllCardsToDeck
+};

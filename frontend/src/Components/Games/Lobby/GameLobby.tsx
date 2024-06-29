@@ -1,16 +1,15 @@
 import React from "react";
 import RulesPopup from "../../Rules/RulesPopup";
-import { IonIcon } from "@ionic/react";
-import { personCircleOutline } from "ionicons/icons";
 
 import "./lobby.css";
-import { Game, RoomData } from "../../../utils/types/types";
+import { Game, Player } from "../../../utils/types/types";
+import GroupIcon from "../../../utils/icons/GroupIcon";
 
 interface GameLobbyProps {
   roomId: string | null;
   player: any;
   gameData: Game;
-  roomData: RoomData;
+  roomData: any;
   onStartGame: () => void;
 }
 
@@ -25,7 +24,7 @@ const GameLobby: React.FC<GameLobbyProps> = ({
     <div className="lobby">
       <section className="game-room-players">
         {roomData.players.length > 0 &&
-          roomData.players.map((mPlayer, index) => (
+          roomData.players.map((mPlayer: Player, index: number) => (
             <div
               key={index}
               className={`player ${
@@ -44,7 +43,7 @@ const GameLobby: React.FC<GameLobbyProps> = ({
             {gameData.minPlayers} -{" "}
             {gameData.maxPlayers === Infinity ? "∞" : gameData.maxPlayers}
           </p>
-          <IonIcon icon={personCircleOutline} />
+          <GroupIcon size={20} />
         </section>
         <p>Players:</p>
         <span
@@ -54,7 +53,7 @@ const GameLobby: React.FC<GameLobbyProps> = ({
         >
           {roomData.players.length} / {gameData.maxPlayers}
         </span>
-        {roomData.admin === player?.socketId && (
+        {roomData.admin === player?.username && (
           <button
             className="default-btn-style"
             onClick={onStartGame}

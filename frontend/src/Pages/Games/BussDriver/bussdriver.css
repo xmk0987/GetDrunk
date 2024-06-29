@@ -1,0 +1,418 @@
+.bd-container {
+  width: 100%;
+  height: 100vh;
+  max-height: calc(100vh - var(--navbar-height));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: hidden;
+  position: relative;
+}
+
+.bd-players {
+  height: 100px;
+  width: 100%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  overflow-x: scroll;
+}
+
+.bd-player {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  justify-content: center;
+}
+
+.bd-player-played-amount {
+  display: inline-flex;
+  align-items: center;
+}
+
+.bd-player-played-amount img {
+  width: 15px;
+}
+
+.bd-player-played-amount p {
+  font-size: 15px !important;
+}
+
+.bd-player p {
+  font-size: 20px;
+  padding: 5px;
+  color: white;
+  text-shadow: var(--text-shadow);
+}
+
+.bd-pyramid-container {
+  flex-grow: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: hidden; /* Allow vertical scrolling within the pyramid container if needed */
+  gap: 2px;
+  padding-bottom: 5px;
+}
+
+.bd-pyramid-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: calc(100% / 5); /* Adjust to fit 5 rows within the available height */
+  position: relative;
+  gap: 5px;
+}
+
+.bd-pyramid-stack {
+  position: relative;
+  display: inline-block;
+  height: 100%;
+  min-width: 60px;
+  overflow: hidden;
+}
+
+.bd-pyramid-stack img {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  max-height: 100%;
+  top: 0;
+  left: 0;
+}
+
+/* Offset each subsequent image to the right */
+.bd-pyramid-stack img:nth-child(2) {
+  top: 17px; /* Adjust the value as needed */
+}
+
+.bd-pyramid-stack img:nth-child(3) {
+  top: 34px; /* Adjust the value as needed */
+}
+
+.bd-pyramid-stack img:nth-child(4) {
+  top: 51px; /* Adjust the value as needed */
+}
+
+.bd-pyramid-card-amount {
+  position: absolute;
+  color: white;
+  background-color: black;
+  font-size: 15px;
+  padding: 3px;
+  border-bottom-right-radius: var(--radius);
+  bottom: 0;
+  right: 0;
+}
+
+.bd-player-options-container {
+  height: 70px;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  border-top: 2px solid black;
+}
+
+.bd-player-cards {
+  height: 100%;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow-x: scroll;
+  padding: 0 25px;
+  padding-left: 75px;
+}
+
+.bd-player-options {
+  width: 60px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 2px solid black;
+}
+
+.bd-player-cards img {
+  height: 80%;
+  width: auto;
+  max-width: 80px;
+}
+
+.bd-player-cards button {
+  height: 80%;
+}
+
+.bd-player-cards button img {
+  height: 100%;
+}
+
+.bd-next-turn-popup {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: 32px;
+  transform: translate(-50%, -50%);
+  background-color: var(--secondary-color);
+  padding: 10px 20px;
+  color: var(--accent-color);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.bd-next-turn-popup:hover {
+  box-shadow: none;
+  background-color: var(--accent-color3);
+  color: white;
+}
+
+.bd-shared-drinks-popup {
+  position: absolute;
+  width: var(--popup-width);
+  min-height: 100px;
+  max-height: var(--popup-height);
+  background-color: var(--secondary-color);
+  top: 10px;
+  left: 10px;
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  z-index: 10;
+}
+
+.bd-shared-drinks {
+  width: 100%;
+  padding-top: 10px;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bd-shared-drink {
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.bd-shared-drink-amount {
+  display: inline-flex;
+  align-items: center;
+}
+
+.bd-shared-drink img {
+  height: 50px;
+  width: auto;
+}
+
+.bd-shared-drinks-popup button {
+  position: absolute;
+  top: 15px;
+  left: 10px;
+}
+
+.bd-send-drinks-popup {
+  width: var(--popup-width);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  min-height: 50px;
+  max-height: var(--popup-height);
+  background-color: var(--secondary-color);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.bd-send-drinks-amount {
+  display: inline-flex;
+  height: 50px;
+  align-items: center;
+  gap: 10px;
+}
+
+.bd-send-drinks-amount img {
+  width: 50px;
+  height: auto;
+}
+
+.bd-send-drinks {
+  flex-grow: 1;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+
+.bd-send-drinks-player {
+  display: inline-flex;
+  gap: 10px;
+  width: 100%;
+  justify-content: center;
+}
+
+.bd-send-drinks-player p {
+  display: flex;
+  justify-content: flex-start;
+  min-width: 50px;
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: scroll;
+}
+
+.bd-send-drinks-player input {
+  padding-left: 10px;
+  max-width: 70px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.bd-close-button {
+  position: absolute;
+  top: 15px;
+  left: 10px;
+}
+
+.bd-send-drinks-button {
+  width: 100%;
+  background-color: black;
+  color: var(--secondary-color);
+  font-size: 20px;
+}
+
+.bd-show-drinks {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  border: 1px solid black;
+  border-radius: 50%;
+  box-shadow: var(--shadow);
+  background-color: var(--secondary-color);
+}
+
+.bd-show-drinks img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.test-skip-button {
+  width: 50px;
+  height: 50px;
+  background-color: red;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.bd-card-can-turn {
+  border-radius: var(--radius);
+  background-color: rgba(255, 251, 0, 0.644); /* 0.5 is 50% opacity */
+}
+
+.bd-bonus-pyramid-stack:disabled,
+.bd-bonus-pyramid-stack:active:disabled,
+.bd-bonus-pyramid-stack:hover:disabled {
+  background-color: transparent;
+}
+
+.bd-bonus-pyramid-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 95%;
+  height: calc(100% / 5); /* Adjust to fit 5 rows within the available height */
+  position: relative;
+  gap: 5px;
+  padding: 5px;
+}
+
+.bd-bonus-pyramid-stack {
+  width: 70px;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bd-bonus-pyramid-stack img {
+  width: 90%;
+  height: auto;
+}
+
+.bd-pyramid-drinks-container {
+  position: absolute;
+  background-color: var(--secondary-color);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  gap: 10px;
+  z-index: 10;
+  width: 200px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.bd-pyramid-drinks-container button {
+  padding: 10px;
+  width: 100%;
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+  background-color: black;
+  color: var(--secondary-color);
+}
+
+.bd-pyramid-drinks-container button:hover {
+  background-color: var(--accent-color3);
+  color: black;
+}
+
+.bd-game-over {
+  position: absolute;
+  background-color: var(--secondary-color);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  z-index: 10;
+  width: 200px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.bd-game-over button {
+  padding: 10px;
+  width: 100%;
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+  background-color: black;
+  color: var(--secondary-color);
+}
+
+.bd-game-over button:hover {
+  background-color: var(--accent-color3);
+  color: black;
+}

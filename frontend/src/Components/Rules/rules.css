@@ -1,10 +1,13 @@
 .rules-popup-container {
   position: absolute;
-  width: 250px;
-  height: 400px;
+  width: var(--popup-width);
+  height: var(--popup-height);
   background-color: var(--secondary-color);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;

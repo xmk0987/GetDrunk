@@ -4,11 +4,16 @@
   width: 100%;
   background-color: var(--secondary-color);
   display: flex;
-  justify-content: flex-end;
   align-items: center;
-  padding-right: 2rem;
+  padding: 20px;
   z-index: 10;
   position: relative;
+}
+
+.main-navbar p {
+  font-size: 24px;
+  color: white;
+  text-shadow: var(--text-shadow);
 }
 
 .main-navbar button {
