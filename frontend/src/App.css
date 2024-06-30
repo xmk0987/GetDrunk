@@ -132,13 +132,6 @@ button:disabled:active {
   font-size: 35px;
 }
 
-.game-message {
-  text-align: center;
-  font-size: 20px;
-  padding: 25px;
-  color: white;
-  text-shadow: var(--text-shadow);
-}
 
 .underline {
   text-decoration: underline;
@@ -174,7 +167,6 @@ button:disabled:active {
 *:active {
   box-shadow: none !important;
 }
-
 
 @media only screen and (max-width: 1100px) {
   .main-header {

@@ -18,20 +18,26 @@ const Players: React.FC<PlayersProps> = ({
     );
   };
 
+  // Sort players so that the player with the given username is first
+  const sortedPlayers = [...players].sort((a, b) => {
+    if (a.username === username) return -1;
+    if (b.username === username) return 1;
+    return 0;
+  });
+
   return (
     <div className="bd-players">
-      {players &&
-        players.map((player) => (
-          <div className="bd-player" key={player.socketId}>
-            <p
-              className={`underline ${
-                player.username === username ? "you" : ""
-              } ${isReady(player) ? "ready-underline" : "not-ready-underline"}`}
-            >
-              {player.username}
-            </p>
-          </div>
-        ))}
+      {sortedPlayers.map((player) => (
+        <div className="bd-player" key={player.socketId}>
+          <p
+            className={`underline ${
+              player.username === username ? "you" : ""
+            } ${isReady(player) ? "ready-underline" : "not-ready-underline"}`}
+          >
+            {player.username}
+          </p>
+        </div>
+      ))}
     </div>
   );
 };

@@ -23,6 +23,9 @@ const getNewDeck = async () => {
     const response = await handleRequest(
       axiosInstance.get("new/shuffle/?deck_count=1")
     );
+    /*     const response = await handleRequest(
+      axiosInstance.get("new/shuffle/?cards=AS,2S,KS,AD")
+    ); */
     return response;
   } catch (error) {
     throw error;
@@ -131,5 +134,5 @@ module.exports = {
   drawFromPile,
   discardCard,
   returnPileToDeck,
-  returnAllCardsToDeck
+  returnAllCardsToDeck,
 };

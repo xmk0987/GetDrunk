@@ -25,18 +25,25 @@ const SendDrinks: React.FC<SendDrinksProps> = ({
   cancelPlayCard,
   username,
 }) => {
+  // Sort players so that the player with the given username is first
+  const sortedPlayers = [...players].sort((a, b) => {
+    if (a.username === username) return 1;
+    if (b.username === username) return -1;
+    return 0;
+  });
+
   return (
     <div className="bd-send-drinks-popup">
-        <button className="bd-close-button opacHover" onClick={cancelPlayCard}>
-            <CloseIcon size={25}/>
-        </button>
+      <button className="bd-close-button opacHover" onClick={cancelPlayCard}>
+        <CloseIcon size={25} />
+      </button>
       <div className="bd-send-drinks-amount">
         <h2>{`SEND ${drinkAmount}x`}</h2>
         <img src={giveBeer} alt="Give Beer" />
       </div>
       {errorMessage !== "" ? <p className="error">{errorMessage}</p> : null}
       <div className="bd-send-drinks">
-        {players.map((p: any) => (
+        {sortedPlayers.map((p: any) => (
           <div key={p.username} className="bd-send-drinks-player">
             <p className={`${p.username === username ? "red" : ""}`}>
               {p.username}
@@ -56,7 +63,10 @@ const SendDrinks: React.FC<SendDrinksProps> = ({
           </div>
         ))}
       </div>
-      <button className="pinkBlackHover bd-send-drinks-button" onClick={handleSendDrinks}>
+      <button
+        className="pinkBlackHover bd-send-drinks-button"
+        onClick={handleSendDrinks}
+      >
         SEND
       </button>
     </div>

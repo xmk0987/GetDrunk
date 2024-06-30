@@ -23,8 +23,8 @@ const Hand: React.FC<HandProps> = ({
   playingCard,
 }) => {
   return (
-    <div className="bd-player-options-container">
-      <div className="bd-player-cards">
+    <section className="bd-player-hand-container">
+      <div className="bd-player-hand">
         {Object.entries(sortedGroupedCards).map(([value, cards]) =>
           cards.map((card) => (
             <button
@@ -43,7 +43,7 @@ const Hand: React.FC<HandProps> = ({
       <div className={`bd-player-options ${ready ? "ready" : "not-ready"}`}>
         <button onClick={toggleReady}>{ready ? "Ready" : "Ready?"}</button>
       </div>
-    </div>
+    </section>
   );
 };
 

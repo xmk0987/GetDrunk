@@ -108,7 +108,7 @@
   right: 0;
 }
 
-.bd-player-options-container {
+.bd-player-hand-container {
   height: 70px;
   width: 100%;
   display: inline-flex;
@@ -116,7 +116,7 @@
   border-top: 2px solid black;
 }
 
-.bd-player-cards {
+.bd-player-hand {
   height: 100%;
   width: 100%;
   display: inline-flex;
@@ -136,17 +136,17 @@
   border-left: 2px solid black;
 }
 
-.bd-player-cards img {
+.bd-player-hand img {
   height: 80%;
   width: auto;
   max-width: 80px;
 }
 
-.bd-player-cards button {
+.bd-player-hand button {
   height: 80%;
 }
 
-.bd-player-cards button img {
+.bd-player-hand button img {
   height: 100%;
 }
 
@@ -382,37 +382,6 @@
 }
 
 .bd-pyramid-drinks-container button:hover {
-  background-color: var(--accent-color3);
-  color: black;
-}
-
-.bd-game-over {
-  position: absolute;
-  background-color: var(--secondary-color);
-  box-shadow: var(--shadow);
-  border-radius: var(--radius);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding: 10px;
-  z-index: 10;
-  width: 200px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.bd-game-over button {
-  padding: 10px;
-  width: 100%;
-  border-bottom-left-radius: var(--radius);
-  border-bottom-right-radius: var(--radius);
-  background-color: black;
-  color: var(--secondary-color);
-}
-
-.bd-game-over button:hover {
   background-color: var(--accent-color3);
   color: black;
 }

@@ -1,31 +1,26 @@
 .ftd-container {
   width: 100%;
-  height: 100%;
-  max-height: calc(100vh - var(--navbar-height));
-  padding-top: var(--header-padding);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow-y: scroll;
+  height: calc(100vh - var(--navbar-height));
+  position: relative;
 }
 
 .ftd-board {
   width: 100%;
   height: 100%;
   flex-grow: 1;
-  display: grid;
-  grid-template-rows: 80px 50px 1fr 250px;
-  grid-template-columns: 1fr;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 .ftd-players {
-  grid-row: 1/2;
-  grid-column: 1/2;
+  width: 100%;
+  height: 60px;
   display: inline-flex;
   justify-content: center;
+  align-items: center;
   overflow-x: scroll;
-  gap: 1rem;
-  margin: 0 50px;
+  gap: 20px;
 }
 
 .ftd-player {
@@ -35,7 +30,7 @@
 }
 
 .ftd-player-name {
-  font-size: 25px;
+  font-size: 20px;
 }
 
 .ftd-player-turn {
@@ -52,32 +47,31 @@
 }
 
 .ftd-turn-counter {
-  grid-row: 2/3;
-  grid-column: 1/2;
+  position: absolute;
+  right: 5px;
+  top: 0;
   font-size: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.ftd-turn-counter p span {
   color: red;
-  font-size: 30px;
 }
 
 .ftd-played-cards-container {
-  grid-row: 3/4;
-  grid-column: 1/2;
-  padding: 10px;
   display: flex;
   flex-direction: column;
+  flex: 1;
+  overflow: hidden;
 }
 
 .ftd-played-cards {
   flex-grow: 1;
+  max-width: 100%;
   display: inline-flex;
   flex-flow: row wrap;
-  gap: 5rem;
+  overflow-y: scroll;
+  gap: 100px;
+  padding: 15px;
 }
 
 .ftd-card-stack {
@@ -87,8 +81,8 @@
 
 .ftd-card {
   position: absolute;
-  width: 70px; /* Adjust width as needed */
-  height: 100px;
+  width: 50px; /* Adjust width as needed */
+  height: 70px;
 }
 
 .ftd-card img {
@@ -99,7 +93,6 @@
   top: 0;
   left: 0;
 }
-
 
 /* Offset each subsequent image to the right */
 .ftd-card img:nth-child(2) {
@@ -116,41 +109,46 @@
 }
 
 .ftd-dealer-card-container {
-  grid-row: 4/5;
-  grid-column: 1/2;
-  background-color: aqua;
+  height: 200px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  flex-direction: column;
+  padding-bottom: 30px;
 }
 
 .ftd-dealer-card {
-  width: 150px;
   height: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
+  padding: 10px;
 }
 
 .ftd-dealer-card img {
-  width: 100%;
-  height: auto;
-}
-.ftd-guesser-card-container {
-  grid-row: 4/5;
-  grid-column: 1/2;
-  padding: 20px;
+  height: 90%;
+  width: auto;
 }
 
-.ftd-guesser-options {
-  flex-grow: 1;
-  width: 100%;
+.ftd-guesser-hand-container {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.ftd-guesser-hand {
   display: inline-flex;
-  flex-flow: row wrap;
-  gap: 1rem;
+  align-items: center;
+  justify-content: space-around;
+  gap: 10px;
+  overflow-x: scroll;
+  padding: 15px;
+  padding-left: 50px;
 }
 
-.ftd-guesser-options img {
-  width: 75px;
-  height: auto;
+.ftd-guesser-hand button {
+  height: 60px;
+}
+
+.ftd-guesser-hand button img {
+  height: 100%;
+  width: auto;
 }

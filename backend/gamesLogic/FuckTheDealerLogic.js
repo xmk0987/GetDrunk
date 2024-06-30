@@ -106,9 +106,11 @@ class FuckTheDealerLogic {
    */
   async handleGuessSmaller(data) {
     this.socketData[this.roomId].game.guessNumber = 2;
+    console.log("DATA HERE", data);
+
     const message = `${
       this.socketData[this.roomId].game.guesser.username
-    } guessed ${data.data.value}. The card is smaller.`;
+    } guessed ${data.value}. The card is smaller.`;
     this.io.to(this.roomId).emit("next-turn", {
       gameData: this.socketData[this.roomId],
       message,
@@ -121,9 +123,10 @@ class FuckTheDealerLogic {
    */
   async handleGuessBigger(data) {
     this.socketData[this.roomId].game.guessNumber = 2;
+    console.log("DATA HERE", data);
     const message = `${
       this.socketData[this.roomId].game.guesser.username
-    } guessed ${data.data.value}. The card is bigger.`;
+    } guessed ${data.value}. The card is bigger.`;
     this.io.to(this.roomId).emit("next-turn", {
       gameData: this.socketData[this.roomId],
       message,
@@ -175,7 +178,7 @@ class FuckTheDealerLogic {
   async handleGuessWrong(data) {
     const deckId = this.socketData[this.roomId].game.deck.deck_id;
     const card = this.socketData[this.roomId].game.deck.cards[0];
-    const guessedValue = data.data.value;
+    const guessedValue = data.value;
     const correctValue = this.mapCardValueToNumber(card.value);
     const difference = Math.abs(correctValue - guessedValue);
     const addCard = await addToPile(deckId, "played", card.code);

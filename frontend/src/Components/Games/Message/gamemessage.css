@@ -1,0 +1,14 @@
+.game-message {
+  width: 100%;
+  text-align: center;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-shadow: var(--text-shadow);
+}
+
+.game-message p {
+  font-size: 15px;
+  color: white;
+}

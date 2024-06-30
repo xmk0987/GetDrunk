@@ -17,6 +17,7 @@ import Hand from "./Components/Hand";
 import SharedDrinks from "./Components/SharedDrinks";
 import SendDrinks from "./Components/SendDrinks";
 import BonusPyramid from "./Components/BonusPyramid";
+import GameOver from "../../../Components/Games/GameOver/GameOver";
 
 const BussDriver: React.FC = () => {
   const GAME = games["bussDriver"];
@@ -217,7 +218,7 @@ const BussDriver: React.FC = () => {
 
   return (
     <>
-      <Navbar text="BUSS DRIVER" header={isGameGoing()} />
+      <Navbar text="BUSS DRIVER" resetGame={resetAll} />
       <main
         className="bd-container"
         style={
@@ -276,7 +277,7 @@ const BussDriver: React.FC = () => {
                 className="bd-show-drinks pinkBlackHover"
                 onClick={(e) => toggleSharedDrinks(e)}
               >
-                <img src={giveBeer}></img>
+                <img src={giveBeer} alt="Mug of Beer"></img>
               </button>
             )}
             {showDrinks && (
@@ -292,21 +293,22 @@ const BussDriver: React.FC = () => {
                 cancelPlayCard={cancelPlayCard}
               />
             )}
-            <button
-              className="test-skip-button"
-              onClick={handleNextTurn}
-            ></button>
           </>
         ) : gameLogic && gameLogic.status === "bonus" ? (
           <>
             {gameLogic.pyramid?.length > 0 && player ? (
-              <BonusPyramid
-                onCardTurned={handlePlayBonusCard}
-                gameLogic={gameLogic}
-                player={player}
-                message={message}
-                resetBonus={handleResetBonusRound}
-              />
+              <>
+                <BonusPyramid
+                  onCardTurned={handlePlayBonusCard}
+                  gameLogic={gameLogic}
+                  player={player}
+                  message={message}
+                  resetBonus={handleResetBonusRound}
+                />
+                {gameLogic.round === 6 ? (
+                  <GameOver resetAll={resetAll} />
+                ) : null}
+              </>
             ) : (
               <p>Loading pyramid...</p>
             )}

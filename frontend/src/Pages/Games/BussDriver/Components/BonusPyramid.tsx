@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { Player } from "../../../../utils/types/types";
+import GameMessage from "../../../../Components/Games/Message/GameMessage";
 
 interface Card {
   code: string;
@@ -94,20 +95,12 @@ const BonusPyramid: React.FC<BonusPyramidProps> = ({
 
   return (
     <>
-      {message !== "" ? <p className="game-message">{message}</p> : null}
+      <GameMessage message={message} />
       <div className="bd-pyramid-container">{rows}</div>
       {gameLogic.drinkAmount !== 0 && isBussDriver() ? (
         <div className="bd-pyramid-drinks-container">
           <h2>Drink {gameLogic.drinkAmount}</h2>
           <button onClick={resetBonus}>START OVER</button>
-        </div>
-      ) : null}
-      {gameLogic.round === 6 ? (
-        <div className="bd-game-over">
-          <h2>GAME OVER</h2>
-          <button>PLAY AGAIN</button>
-
-          <button>RETURN TO GAMES</button>
         </div>
       ) : null}
     </>

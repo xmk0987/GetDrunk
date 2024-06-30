@@ -68,6 +68,21 @@ export class BussDriverLogic {
    * Resets the game to its initial state.
    */
   resetGame() {
+    this.status = "choose";
+    this.admin = null;
+    this.players = [];
+    this.roomId = null;
+    this.round = 1;
+    this.bussDriver = null;
+    this.playedCards = [];
+    this.pyramid = null;
+    this.hand = null;
+    this.turnedCards = {}; // Initialize as an empty object
+    this.readyPlayers = [];
+    this.deckId = null;
+    this.drinkAmount = 2;
+    this.drinkHistory = [];
+
     console.log("Game has been reset to initial state.");
   }
 }

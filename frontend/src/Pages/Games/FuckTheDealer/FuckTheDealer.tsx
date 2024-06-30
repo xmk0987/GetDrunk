@@ -1,10 +1,8 @@
 import React, { useState, useCallback, useMemo } from "react";
-
 import { useGameSocket } from "../../../Hooks/useGameSocket";
 import { games } from "../../../utils/games/games";
 import { FuckTheDealerLogic } from "../../../utils/gameLogics/fuckTheDealerLogic";
 import { Card } from "../../../utils/types/types";
-
 import Navbar from "../../../Components/Navbar/Navbar";
 import GetIntoGame from "../../../Components/Games/GetIntoGame/GetIntoGame";
 import GameLobby from "../../../Components/Games/Lobby/GameLobby";
@@ -13,22 +11,17 @@ import PlayedCards from "./Components/PlayedCards";
 import GuesserOptions from "./Components/GuesserOptions";
 import TurnCounter from "./Components/TurnCounter";
 import RulesPopup from "../../../Components/Rules/RulesPopup";
-
 import {
   mapCardValueToNumber,
   groupCardsByValue,
 } from "../../../utils/helperFunctions";
-
 import "./fuckthedealer.css";
+import GameMessage from "../../../Components/Games/Message/GameMessage";
+import GameOver from "../../../Components/Games/GameOver/GameOver";
 
 const FuckTheDealer: React.FC = () => {
-  // Get the game logic for "Fuck the Dealer"
   const GAME = games["fuckTheDealer"];
-
-  // Create an instance of the game logic using useMemo to memoize it
   const ftdLogic = useMemo(() => new FuckTheDealerLogic(), []);
-
-  // Hook to manage socket events and state
   const {
     error,
     message,
@@ -43,15 +36,10 @@ const FuckTheDealer: React.FC = () => {
     handlePlayerAction,
   } = useGameSocket(ftdLogic);
 
-  // State to track the guessed card and whether the guess is bigger or smaller
   const [guessedCard, setGuessedCard] = useState<number | null>(null);
   const [bigger, setBigger] = useState<boolean>(false);
   const [smaller, setSmaller] = useState<boolean>(false);
 
-  /**
-   * Handles the click event for guessing a card.
-   * @param value - The value of the guessed card.
-   */
   const handleCardClick = (value: number) => {
     setGuessedCard(value);
     const cardToGuessValue = mapCardValueToNumber(
@@ -71,11 +59,6 @@ const FuckTheDealer: React.FC = () => {
     }
   };
 
-  /**
-   * Handles wrong guesses and sets state accordingly.
-   * @param value - The value of the guessed card.
-   * @param sizeComparison - The comparison result ("smaller" or "bigger").
-   */
   const handleWrongGuess = (value: number, sizeComparison: string = "") => {
     const isLastGuess =
       gameLogic.deck?.remaining <= 20 || sizeComparison === "";
@@ -90,19 +73,11 @@ const FuckTheDealer: React.FC = () => {
     setSmaller(sizeComparison === "smaller");
   };
 
-  /**
-   * Resets the guess state.
-   */
   const resetGuessState = () => {
     setBigger(false);
     setSmaller(false);
   };
 
-  /**
-   * Checks if the card should be masked based on the current guess state.
-   * @param value - The value of the card.
-   * @returns True if the card should be masked, otherwise false.
-   */
   const isMasked = (value: number): boolean => {
     if (guessedCard !== null) {
       return bigger
@@ -114,7 +89,6 @@ const FuckTheDealer: React.FC = () => {
     return false;
   };
 
-  // Sort and group the cards using useMemo to memoize the result
   const sortedGroupedCards = useMemo(() => {
     const groupedCards = gameLogic
       ? groupCardsByValue(gameLogic.playedCards)
@@ -128,57 +102,22 @@ const FuckTheDealer: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameLogic, groupCardsByValue, gameLogic.playedCards.length]);
 
-  // Render loading state
-  if (loading) {
-    return (
-      <>
-        <Navbar text="F*CK THE DEALER" header={true} />
-        <main className="center-container">
-          <div className="game-over">Loading ...</div>
-        </main>
-      </>
-    );
-  }
+  const isGameOver = useCallback(() => {
+    console.log("DECK NOW IS THIS ", gameLogic.deck);
+    if (!gameLogic || !gameLogic.deck) {
+      return false;
+    }
 
-  // Render error state
-  if (error) {
-    return (
-      <>
-        <Navbar text="F*CK THE DEALER" header={true} />
-        <main className="center-container">
-          <div className="game-over">{error}</div>
-          <button className="default-btn-style" onClick={resetAll}>
-            PLAY AGAIN
-          </button>
-        </main>
-      </>
-    );
-  }
+    const { deck } = gameLogic;
+    console.log("DECK", deck.remaining === 0 && deck.cards.length === 0);
+    return deck.remaining === 0 && deck.cards.length === 0;
+  }, [gameLogic]);
 
-  // Render game over state
-  if (
-    gameLogic &&
-    gameLogic.deck &&
-    gameLogic.deck.remaining === 0 &&
-    gameLogic.deck.cards.length === 0
-  ) {
-    return (
-      <>
-        <Navbar text="F*CK THE DEALER" header={true} />
-        <main className="center-container">
-          <div className="game-over">GAME OVER</div>
-          <button className="default-btn-style" onClick={resetAll}>
-            PLAY AGAIN
-          </button>
-        </main>
-      </>
-    );
-  }
+  console.log("is the gameover? ", isGameOver());
 
-  // Render game components
   return (
     <>
-      <Navbar text="F*CK THE DEALER" header={true} />
+      <Navbar text="F*CK THE DEALER" resetGame={resetAll} />
       <main className="ftd-container">
         {roomInfo?.game.status === "lobby" ? (
           <GameLobby
@@ -190,7 +129,7 @@ const FuckTheDealer: React.FC = () => {
           />
         ) : gameLogic && gameLogic.status === "playing" ? (
           <>
-            <p className="game-message">{message}</p>
+            <GameMessage message={message} />
             <div className="ftd-board">
               <PlayerList
                 players={gameLogic.players}
@@ -201,20 +140,22 @@ const FuckTheDealer: React.FC = () => {
               <TurnCounter dealerTurn={gameLogic.dealerTurn} />
               <PlayedCards groupedCards={sortedGroupedCards} />
               {gameLogic.dealer &&
-              gameLogic.dealer.socketId === player?.socketId ? (
-                <section className="ftd-dealer-card-container">
-                  {gameLogic.deck?.cards?.length === 1 && (
-                    <button className="ftd-dealer-card">
+              gameLogic.dealer.socketId === player?.socketId &&
+              !isGameOver() ? (
+                <div className="ftd-dealer-card-container">
+                  <p>Turned card:</p>
+                  <div className="ftd-dealer-card">
+                    {gameLogic.deck?.cards?.length === 1 && (
                       <img
                         src={gameLogic.deck.cards[0].image}
                         alt="Card to guess"
                       />
-                    </button>
-                  )}
-                </section>
-              ) : null}
-              {gameLogic.guesser &&
-              gameLogic.guesser.socketId === player?.socketId ? (
+                    )}
+                  </div>
+                </div>
+              ) : gameLogic.guesser &&
+                gameLogic.guesser.socketId === player?.socketId &&
+                !isGameOver() ? (
                 <GuesserOptions
                   playedCards={sortedGroupedCards}
                   handleCardClick={handleCardClick}
@@ -230,6 +171,7 @@ const FuckTheDealer: React.FC = () => {
             game_name={GAME.route}
           />
         )}
+        {isGameOver() && <GameOver resetAll={resetAll} />}
         <RulesPopup header={GAME.name} rules={GAME.rules} />
       </main>
     </>

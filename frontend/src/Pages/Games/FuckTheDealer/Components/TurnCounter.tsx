@@ -8,9 +8,7 @@ interface TurnCounterProps {
 const TurnCounter: React.FC<TurnCounterProps> = ({ dealerTurn }) => {
   return (
     <section className="ftd-turn-counter">
-      <p>
-        Wrong guesses: <span>{dealerTurn - 1}/3</span>
-      </p>
+      <span>{dealerTurn - 1}/3</span>
     </section>
   );
 };

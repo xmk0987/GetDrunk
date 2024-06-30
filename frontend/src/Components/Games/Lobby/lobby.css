@@ -1,5 +1,6 @@
 .lobby {
   width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -8,9 +9,9 @@
 }
 
 .lobby-player-amount {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .game-room-players {
