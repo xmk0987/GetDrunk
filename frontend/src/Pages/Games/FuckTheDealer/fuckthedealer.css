@@ -18,7 +18,7 @@
   height: 60px;
   display: inline-flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   overflow-x: scroll;
   gap: 20px;
 }
@@ -65,13 +65,14 @@
 }
 
 .ftd-played-cards {
-  flex-grow: 1;
-  max-width: 100%;
-  display: inline-flex;
-  flex-flow: row wrap;
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(80px, 1fr)
+  ); /* Adjust minmax width as needed */
+  gap: 150px 50px;
+  padding: 15px 15px 200px 15px;
   overflow-y: scroll;
-  gap: 100px;
-  padding: 15px;
 }
 
 .ftd-card-stack {
@@ -120,7 +121,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding-bottom: 30px;
 }
 
 .ftd-dealer-card img {
@@ -131,7 +132,7 @@
 .ftd-guesser-hand-container {
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  padding-bottom: 30px;
 }
 
 .ftd-guesser-hand {
@@ -141,7 +142,7 @@
   gap: 10px;
   overflow-x: scroll;
   padding: 15px;
-  padding-left: 50px;
+  padding-left: 100px;
 }
 
 .ftd-guesser-hand button {
