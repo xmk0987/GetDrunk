@@ -103,17 +103,13 @@ const FuckTheDealer: React.FC = () => {
   }, [gameLogic, groupCardsByValue, gameLogic.playedCards.length]);
 
   const isGameOver = useCallback(() => {
-    console.log("DECK NOW IS THIS ", gameLogic.deck);
     if (!gameLogic || !gameLogic.deck) {
       return false;
     }
 
     const { deck } = gameLogic;
-    console.log("DECK", deck.remaining === 0 && deck.cards.length === 0);
     return deck.remaining === 0 && deck.cards.length === 0;
   }, [gameLogic]);
-
-  console.log("is the gameover? ", isGameOver());
 
   return (
     <>
@@ -165,11 +161,13 @@ const FuckTheDealer: React.FC = () => {
             </div>
           </>
         ) : (
-          <GetIntoGame
-            setError={setError}
-            setLoading={setLoading}
-            game_name={GAME.route}
-          />
+          <>
+            <GetIntoGame
+              setError={setError}
+              setLoading={setLoading}
+              game_name={GAME.route}
+            />
+          </>
         )}
         {isGameOver() && <GameOver resetAll={resetAll} />}
         <RulesPopup header={GAME.name} rules={GAME.rules} />

@@ -1,5 +1,5 @@
-import Navbar from "../../Components/Navbar/Navbar.tsx";
-import Footer from "../../Components/Footer/Footer.tsx";
+import Navbar from "../../Components/Navbar/Navbar";
+import Footer from "../../Components/Footer/Footer";
 
 import "./home.css";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +13,7 @@ const Home = () => {
 
   return (
     <>
-      <Navbar text="GET DRUNK" size={true} />
+      <Navbar text="GET DRUNK" />
       <main className="home-main">
         <button
           className="lets-drink default-btn-style"

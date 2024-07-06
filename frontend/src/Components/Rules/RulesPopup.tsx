@@ -1,6 +1,6 @@
 import React, { useState } from "react"; // Ensure React is in scope since JSX is used
-import RulesOnly from "./RulesOnly.tsx";
-import ToggleRulesButton from "./RulesButton.tsx";
+import RulesOnly from "./RulesOnly";
+import ToggleRulesButton from "./RulesButton";
 import "./rules.css";
 
 interface RulesPopupProps {

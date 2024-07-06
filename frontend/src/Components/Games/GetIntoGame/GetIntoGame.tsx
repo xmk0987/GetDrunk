@@ -39,8 +39,8 @@ const GetIntoGame: React.FC<{
     }
   };
 
-  const setPath = (path: string): void => {
-    setView(path);
+  const handleSetView = (newView: string): void => {
+    setView(newView);
     setError(null); // Reset error when changing views
   };
 
@@ -56,8 +56,9 @@ const GetIntoGame: React.FC<{
       <div className="getintogame-options">
         {view === "create" ? (
           <div className="getintogame-join-popup">
-            <label>Your name:</label>
+            <label htmlFor="your-name">Your name:</label>
             <input
+              id="your-name"
               type="text"
               value={username}
               onChange={handleUsernameChange}
@@ -75,10 +76,16 @@ const GetIntoGame: React.FC<{
           </div>
         ) : view === "join" ? (
           <div className="getintogame-join-popup">
-            <label>Room name:</label>
-            <input type="text" value={roomName} onChange={handleNameChange} />
-            <label>Your name:</label>
+            <label htmlFor="room-name">Room name:</label>
             <input
+              id="room-name"
+              type="text"
+              value={roomName}
+              onChange={handleNameChange}
+            />
+            <label htmlFor="your-name">Your name:</label>
+            <input
+              id="your-name"
               type="text"
               value={username}
               onChange={handleUsernameChange}
@@ -97,13 +104,13 @@ const GetIntoGame: React.FC<{
         ) : (
           <>
             <button
-              onClick={() => setPath("create")}
+              onClick={() => handleSetView("create")}
               className="default-btn-style"
             >
               Create Room
             </button>
             <button
-              onClick={() => setPath("join")}
+              onClick={() => handleSetView("join")}
               className="default-btn-style"
             >
               Join Room

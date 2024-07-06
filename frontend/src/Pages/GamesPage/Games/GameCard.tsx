@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Game } from "../../../utils/types/types.ts";
+import { Game } from "../../../utils/types/types";
 
-import RulesOnly from "../../../Components/Rules/RulesOnly.tsx";
+import RulesOnly from "../../../Components/Rules/RulesOnly";
 import "./gamecard.css";
 import { useNavigate } from "react-router-dom";
-import GroupIcon from "../../../utils/icons/GroupIcon.tsx";
+import GroupIcon from "../../../utils/icons/GroupIcon";
 
 interface GameCardProps {
   game: Game;

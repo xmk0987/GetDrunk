@@ -1,14 +1,15 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 
-import FuckTheDealer from "./Pages/Games/FuckTheDealer/FuckTheDealer.tsx";
-import Home from "./Pages/Home/Home.tsx";
-import SpinTheBottle from "./Pages/Games/SpinTheBottle/SpinTheBottle.tsx";
-import GamesPage from "./Pages/GamesPage/GamesPage.tsx";
+import FuckTheDealer from "./Pages/Games/FuckTheDealer/FuckTheDealer";
+import Home from "./Pages/Home/Home";
+import SpinTheBottle from "./Pages/Games/SpinTheBottle/SpinTheBottle";
+import GamesPage from "./Pages/GamesPage/GamesPage";
 
 import "./App.css";
-import { SocketProvider } from "./Providers/SocketContext.tsx";
-import BussDriver from "./Pages/Games/BussDriver/BussDriver.tsx";
+import { SocketProvider } from "./Providers/SocketContext";
+import BussDriver from "./Pages/Games/BussDriver/BussDriver";
+import RingOfFire from "./Pages/Games/RingOfFire/RingOfFIre";
 
 function App() {
   return (
@@ -20,6 +21,8 @@ function App() {
           <Route path="/games/fuckTheDealer" element={<FuckTheDealer />} />
           <Route path="/games/spinTheBottle" element={<SpinTheBottle />} />
           <Route path="/games/bussDriver" element={<BussDriver />} />
+          <Route path="/games/ringOfFire" element={<RingOfFire />} />
+
           <Route path="/*" element={<Home />} />
         </Routes>
       </SocketProvider>

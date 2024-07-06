@@ -1,0 +1,13 @@
+.rof-container {
+  width: 100%;
+  height: calc(100vh - var(--navbar-height));
+  position: relative;
+}
+
+.rof-ring {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

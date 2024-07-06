@@ -6,10 +6,10 @@ import bottle from "../../../utils/images/games/gambina.png";
 
 // Type definitions for games should ideally be defined where the games object is declared.
 // Assuming it's correctly imported with its types.
-import { games } from "../../../utils/games/games.ts";
+import { games } from "../../../utils/games/games";
 
-import RulesPopup from "../../../Components/Rules/RulesPopup.tsx";
-import Navbar from "../../../Components/Navbar/Navbar.tsx";
+import RulesPopup from "../../../Components/Rules/RulesPopup";
+import Navbar from "../../../Components/Navbar/Navbar";
 
 const SpinTheBottle: React.FC = () => {
   const GAME = games["spinTheBottle"];

@@ -1,10 +1,10 @@
-import Navbar from "../../Components/Navbar/Navbar.tsx";
-import Footer from "../../Components/Footer/Footer.tsx";
-import GameCard from "./Games/GameCard.tsx";
+import Navbar from "../../Components/Navbar/Navbar";
+import Footer from "../../Components/Footer/Footer";
+import GameCard from "./Games/GameCard";
 
 import "./gamespage.css";
 
-import { games } from "../../utils/games/games.ts";
+import { games } from "../../utils/games/games";
 
 const GamesPage = () => {
   return (
