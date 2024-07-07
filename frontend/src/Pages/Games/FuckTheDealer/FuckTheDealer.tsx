@@ -18,6 +18,7 @@ import {
 import "./fuckthedealer.css";
 import GameMessage from "../../../Components/Games/Message/GameMessage";
 import GameOver from "../../../Components/Games/GameOver/GameOver";
+import DealerCard from "./Components/DealerCard";
 
 const FuckTheDealer: React.FC = () => {
   const GAME = games["fuckTheDealer"];
@@ -138,17 +139,7 @@ const FuckTheDealer: React.FC = () => {
               {gameLogic.dealer &&
               gameLogic.dealer.socketId === player?.socketId &&
               !isGameOver() ? (
-                <div className="ftd-dealer-card-container">
-                  <p>Turned card:</p>
-                  <div className="ftd-dealer-card">
-                    {gameLogic.deck?.cards?.length === 1 && (
-                      <img
-                        src={gameLogic.deck.cards[0].image}
-                        alt="Card to guess"
-                      />
-                    )}
-                  </div>
-                </div>
+                <DealerCard gameLogic={gameLogic} />
               ) : gameLogic.guesser &&
                 gameLogic.guesser.socketId === player?.socketId &&
                 !isGameOver() ? (

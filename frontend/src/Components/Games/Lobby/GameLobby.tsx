@@ -21,7 +21,7 @@ const GameLobby: React.FC<GameLobbyProps> = ({
   onStartGame,
 }) => {
   return (
-    <div className="lobby">
+    <div data-testid="lobby" className="lobby">
       <section className="game-room-players">
         {roomData.players.length > 0 &&
           roomData.players.map((mPlayer: Player, index: number) => (

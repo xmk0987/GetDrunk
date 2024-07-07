@@ -22,7 +22,6 @@ function App() {
           <Route path="/games/spinTheBottle" element={<SpinTheBottle />} />
           <Route path="/games/bussDriver" element={<BussDriver />} />
           <Route path="/games/ringOfFire" element={<RingOfFire />} />
-
           <Route path="/*" element={<Home />} />
         </Routes>
       </SocketProvider>

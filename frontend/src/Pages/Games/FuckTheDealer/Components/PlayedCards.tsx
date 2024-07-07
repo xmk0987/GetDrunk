@@ -10,7 +10,7 @@ const PlayedCards: React.FC<PlayedCardsProps> = ({ groupedCards }) => {
   return (
     <section className="ftd-played-cards-container">
       <p>Played cards:</p>
-      <div className="ftd-played-cards">
+      <div data-testid="played-cards" className="ftd-played-cards">
         {Object.keys(groupedCards).map((value) => (
           <div className="ftd-card-stack" key={value}>
             {groupedCards[value].map((card: Card, index: number) => (

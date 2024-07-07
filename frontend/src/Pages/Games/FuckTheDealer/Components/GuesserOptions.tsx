@@ -18,12 +18,13 @@ const GuesserOptions: React.FC<GuesserOptionsProps> = ({
   };
 
   return (
-    <div className="ftd-guesser-hand-container">
+    <div data-testid="guesser-container" className="ftd-guesser-hand-container">
       <p>Play a card:</p>
       <section className="ftd-guesser-hand">
         {cardsBySuit.H.map((card, index) => {
           return (
             <button
+              data-testid={`card-${index + 1}`}
               key={index}
               onClick={() => handleCardClick(index + 1)}
               className={`${

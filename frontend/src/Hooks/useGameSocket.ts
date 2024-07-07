@@ -88,6 +88,7 @@ export const useGameSocket = (initialGameLogic: any) => {
     const handleRoomJoined = (data: any) => {
       const { roomData, player } = data;
       setRoomInfo(roomData);
+      console.log("Room info in lobby", roomData);
       setPlayer(player);
       setLoading(false);
       if (roomData.game.status === "playing") {
@@ -117,6 +118,7 @@ export const useGameSocket = (initialGameLogic: any) => {
       setMessage("");
       gameLogic.setGameData(data);
       setRoomInfo(data);
+      console.log("Room info:", data);
     };
 
     /**
