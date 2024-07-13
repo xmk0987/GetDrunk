@@ -7,7 +7,9 @@ We are using https://deckofcardsapi.com/ for all the card games.
 
 Current games include: 
 
-Spin The Bottle, F*ck the Dealer, many more are being done.
+Spin The Bottle, F*ck the Dealer, BussDriver and Ring Of Fire. 
+
+Many more are being done.
 
 # Getting Started with Create React App
 
