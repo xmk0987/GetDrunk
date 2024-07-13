@@ -32,6 +32,9 @@ const RingOfFire: React.FC = () => {
     return false;
   };
 
+  const cardBack = "https://deckofcardsapi.com/static/img/back.png";
+  const radius = 200;
+
   return (
     <>
       <Navbar text="RING OF FIRE" resetGame={resetAll} />
@@ -46,10 +49,27 @@ const RingOfFire: React.FC = () => {
           />
         ) : gameLogic && gameLogic.status === "playing" ? (
           <>
-            <GameMessage message={message} />
-            <div className="rof-ring">
-              <p>RING OF FIRE</p>
-            </div>
+            {[...Array(52)].map((_, index) => {
+              const angle = (360 / 52) * index;
+              const x = radius * Math.cos((angle * Math.PI) / 180);
+              const y = radius * Math.sin((angle * Math.PI) / 180);
+              return (
+                <div
+                  key={index}
+                  className="rof-single-card-container"
+                  style={{
+                    transform: `translate(${x}px, ${y}px) rotate(${angle}deg)`,
+                  }}
+                >
+                  <button
+                    className="rof-single-card"
+                    style={{ transform: `rotate(${-angle}deg)` }}
+                  >
+                    <img src={cardBack} alt="back of card" />
+                  </button>
+                </div>
+              );
+            })}
           </>
         ) : (
           <GetIntoGame

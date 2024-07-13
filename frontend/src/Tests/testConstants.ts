@@ -1,4 +1,5 @@
 import { FuckTheDealerLogic } from "../utils/gameLogics/fuckTheDealerLogic";
+import { RingOfFireLogic } from "../utils/gameLogics/ringOfFireLogic";
 
 // FUCK THE DEALAER TEST CONSTANTS
 
@@ -58,11 +59,6 @@ export const TEST_FTD_GAME = {
     ],
     roomId: "testroom",
   },
-  resetAll: jest.fn(),
-  setError: jest.fn(),
-  setLoading: jest.fn(),
-  startGame: jest.fn(),
-  handlePlayerAction: jest.fn(),
 };
 
 export const TEST_FTD_GAME_OVER = {
@@ -117,5 +113,42 @@ export const TEST_FTD_GAME_OVER = {
   handlePlayerAction: jest.fn(),
 };
 
-
-
+export const TEST_ROF_GAME = {
+  error: null,
+  message: "",
+  loading: false,
+  player: { socketId: "hyNJAbsVqWeNVhRsAACX", username: "Player1" },
+  gameLogic: new RingOfFireLogic(),
+  roomInfo: {
+    admin: "Player1",
+    game: {
+      deck: {
+        success: true,
+        deck_id: "pxtqd80jbzai",
+        remaining: 52,
+      },
+      deckId: "pxtqd80jbzai",
+      playerInTurn: {
+        socketId: "afasdfdsfdsAACX",
+        username: "Player2",
+      },
+      name: "ringOfFIre",
+      status: "playing",
+    },
+    players: [
+      {
+        socketId: "hyNJAbsVqWeNVhRsAACX",
+        username: "Player1",
+      },
+      {
+        socketId: "afasdfdsfdsAACX",
+        username: "Player2",
+      },
+      {
+        socketId: "hyNJgfdgdfgadfa",
+        username: "Player3",
+      },
+    ],
+    roomId: "testroom",
+  },
+};

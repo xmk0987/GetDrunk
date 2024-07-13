@@ -17,7 +17,7 @@ import { TEST_FTD_GAME, TEST_FTD_GAME_OVER } from "../testConstants";
 // Mock the useGameSocket hook
 jest.mock("../../Hooks/useGameSocket");
 
-describe("FuckTheDealer Component", () => {
+describe("FuckTheDealer Game", () => {
   const mockUseGameSocket = useGameSocket as jest.MockedFunction<
     typeof useGameSocket
   >;

@@ -8,10 +8,10 @@ export class RingOfFireLogic {
   roomId: string | null = null;
   admin: string | null = null;
   players: Array<Player> = [];
-  playedCards: Array<any> = [];
   status: string = "choose";
   playerInTurn: Player | null = null;
   deck: any = null;
+  deckId: string | null = null;
 
   /**
    * Starts the game by emitting a "start-game" event.
@@ -28,7 +28,15 @@ export class RingOfFireLogic {
    * @param {RoomData} data - The room data containing game information.
    */
   setGameData(data: any) {
-    console.log("Game set with data:", data);
+    console.log("Ring Of Fire set with data:", data);
+    const { status, deck, deckId, playerInTurn } = data.game;
+    this.roomId = data.roomId;
+    this.players = data.players;
+    this.admin = data.admin;
+    this.status = status;
+    this.deck = deck;
+    this.deckId = deckId;
+    this.playerInTurn = playerInTurn;
   }
 
   /**
