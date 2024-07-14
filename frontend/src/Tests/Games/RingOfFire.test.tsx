@@ -3,7 +3,6 @@ import React from "react";
 import {
   render,
   screen,
-  within,
   waitFor,
   fireEvent,
 } from "@testing-library/react";
@@ -81,5 +80,167 @@ describe("Ring Of Fire Game", () => {
     // Check if GameLobby component is rendered
     const lobbyElement = screen.getByTestId("lobby");
     expect(lobbyElement).toBeInTheDocument();
+  });
+
+  it("renders playing state correctly", () => {
+    const initialLogic = new RingOfFireLogic();
+    initialLogic.status = "playing";
+    initialLogic.deck = { remaining: 52 };
+    initialLogic.cards = Array(52).fill(1);
+    initialLogic.playerInTurn = {
+      socketId: "hyNJAbsVqWeNVhRsAACX",
+      username: "Player1",
+    };
+
+    mockUseGameSocket.mockReturnValue({
+      ...mockReturnValue,
+      gameLogic: initialLogic,
+      roomInfo: {
+        ...mockReturnValue.roomInfo,
+        game: {
+          name: "ringOfFire",
+          status: "playing",
+        },
+      },
+    });
+
+    render(
+      <MemoryRouter>
+        <RingOfFire />
+      </MemoryRouter>
+    );
+
+    // Check if the player's turn is displayed
+    expect(screen.getByTestId("rof-turn")).toBeInTheDocument();
+    expect(screen.getByTestId("rof-self-player")).toBeInTheDocument();
+  });
+
+  it("renders the correct number of cards in the circle", () => {
+    const initialLogic = new RingOfFireLogic();
+    initialLogic.status = "playing";
+    initialLogic.deck = { remaining: 52 };
+    initialLogic.cards = Array(52).fill(1);
+    initialLogic.playerInTurn = {
+      socketId: "hyNJAbsVqWeNVhRsAACX",
+      username: "Player1",
+    };
+
+    mockUseGameSocket.mockReturnValue({
+      ...mockReturnValue,
+      gameLogic: initialLogic,
+      roomInfo: {
+        ...mockReturnValue.roomInfo,
+        game: {
+          name: "ringOfFire",
+          status: "playing",
+        },
+      },
+    });
+
+    render(
+      <MemoryRouter>
+        <RingOfFire />
+      </MemoryRouter>
+    );
+
+    // Check if the correct number of cards are rendered
+    const cardButtons = screen.getAllByRole("button", {
+      name: /back of card/,
+    });
+    expect(cardButtons).toHaveLength(52);
+
+    // Verify the position and rotation of a few cards
+    cardButtons.forEach((button, index) => {
+      const angle = (360 / 52) * index;
+      const x = 200 * Math.cos((angle * Math.PI) / 180);
+      const y = 200 * Math.sin((angle * Math.PI) / 180);
+      const transform = `translate(${x}px, ${y}px) rotate(${angle}deg)`;
+
+      expect(button.parentElement).toHaveStyle(`transform: ${transform}`);
+      expect(button).toHaveStyle(`transform: rotate(${-angle}deg)`);
+    });
+  });
+
+  it("displays card rule when card is turned and rule button is clicked", async () => {
+    const initialLogic = new RingOfFireLogic();
+    initialLogic.status = "playing";
+    initialLogic.deck = { remaining: 52 };
+    initialLogic.cards = Array(52).fill(1);
+    initialLogic.playerInTurn = {
+      socketId: "hyNJAbsVqWeNVhRsAACX",
+      username: "Player1",
+    };
+    initialLogic.card = {
+      code: "AS",
+      value: "A",
+      image: "https://deckofcardsapi.com/static/img/AS.png",
+      suit: "SPADES",
+    };
+
+    mockUseGameSocket.mockReturnValue({
+      ...mockReturnValue,
+      gameLogic: initialLogic,
+      roomInfo: {
+        ...mockReturnValue.roomInfo,
+        game: {
+          name: "ringOfFire",
+          status: "playing",
+        },
+      },
+    });
+
+    render(
+      <MemoryRouter>
+        <RingOfFire />
+      </MemoryRouter>
+    );
+
+    // Check if the turned card image is displayed
+    expect(screen.getByAltText("Turned card is AS")).toBeInTheDocument();
+
+    // Click the button to show card rule
+    fireEvent.click(screen.getByText("Card Rule"));
+
+    // Wait for the card rule to be displayed
+    await waitFor(() => {
+      expect(screen.getByTestId("rof-turned-card-rules")).toBeInTheDocument();
+    });
+
+    // Click the button to close the card rule
+    fireEvent.click(screen.getByText("CLOSE"));
+
+    // Wait for the card rule to be hidden
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId("rof-turned-card-rules")
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  it("renders GameOver component when the game is over", () => {
+    const initialLogic = new RingOfFireLogic();
+    initialLogic.status = "playing";
+    initialLogic.deck = { remaining: 1 };
+
+    mockUseGameSocket.mockReturnValue({
+      ...mockReturnValue,
+      gameLogic: initialLogic,
+      roomInfo: {
+        ...mockReturnValue.roomInfo,
+        game: {
+          name: "ringOfFire",
+          status: "playing",
+        },
+      },
+    });
+
+    render(
+      <MemoryRouter>
+        <RingOfFire />
+      </MemoryRouter>
+    );
+
+    // Check if GameOver component is rendered
+    expect(screen.getByText("GAME OVER")).toBeInTheDocument();
   });
 });

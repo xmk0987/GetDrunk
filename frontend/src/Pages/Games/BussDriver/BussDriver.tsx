@@ -57,7 +57,7 @@ const BussDriver: React.FC = () => {
     if (ready && gameLogic.drinkHistory.length > 0) {
       setShowSharedDrinks(true);
     }
-  }, [ready]);
+  }, [gameLogic.drinkHistory.length, ready]);
 
   useEffect(() => {
     if (gameLogic.drinkHistory.length > 0) {
@@ -119,25 +119,22 @@ const BussDriver: React.FC = () => {
       }, {} as Record<string, Card[]>);
   }, [hand]);
 
-  const handleNextTurn = () => {
-    console.log("button clicked");
+  const handleNextTurn = (): void => {
     if (
       Object.keys(gameLogic.turnedCards).length < gameLogic?.pyramid?.length
     ) {
-      console.log("SEND TURN CARD");
       handlePlayerAction("TURN_CARD");
     } else {
-      console.log("All cards have been turned");
       handlePlayerAction("START_BONUS");
     }
   };
 
-  const cancelPlayCard = () => {
+  const cancelPlayCard = (): void => {
     setShowDrinks(false);
     setSelectedCard(null);
   };
 
-  const handlePlayCard = (card: Card) => {
+  const handlePlayCard = (card: Card): void => {
     if (!playingCard) {
       console.log("Card selected to play", card);
       setSelectedCard(card);
@@ -145,7 +142,7 @@ const BussDriver: React.FC = () => {
     }
   };
 
-  const handleSendDrinks = () => {
+  const handleSendDrinks = (): void => {
     const totalDrinks = Object.values(drinkDistribution).reduce(
       (a, b) => a + b,
       0
@@ -174,7 +171,7 @@ const BussDriver: React.FC = () => {
     }
   };
 
-  const handleDrinkInputChange = (username: string, amount: number) => {
+  const handleDrinkInputChange = (username: string, amount: number): void => {
     const totalDrinks =
       Object.values(drinkDistribution).reduce((a, b) => a + b, 0) -
       (drinkDistribution[username] || 0) +
@@ -197,22 +194,20 @@ const BussDriver: React.FC = () => {
 
   const lastTurnedCard = getLastTurnedCard();
 
-  const toggleSharedDrinks = (event: any) => {
+  const toggleSharedDrinks = (event: any): void => {
     event.stopPropagation();
     setShowSharedDrinks(!showSharedDrinks);
   };
 
-  const handlePlayBonusCard = (card: Card) => {
-    console.log("TUrn a card in bonus");
-    console.log(card);
+  const handlePlayBonusCard = (card: Card): void => {
     handlePlayerAction("PLAY_BONUS_CARD", card);
   };
 
-  const handleResetBonusRound = () => {
+  const handleResetBonusRound = (): void => {
     handlePlayerAction("RESET_BONUS");
   };
 
-  const isGameGoing = () => {
+  const isGameGoing = (): boolean => {
     return gameLogic?.status !== "playing" && gameLogic?.status !== "bonus";
   };
 

@@ -111,25 +111,14 @@ export const useGameSocket = (initialGameLogic: any) => {
     };
 
     /**
-     * Handle game start.
-     * @param data - The room data.
-     */
-    const handleGameStarted = (data: any) => {
-      setMessage("");
-      gameLogic.setGameData(data);
-      setRoomInfo(data);
-      console.log("Room info:", data);
-    };
-
-    /**
      * Handle next turn.
      * @param data - The room data.
      */
-    const handleNextTurn = (data: any) => {
+    const handleReceivedGameData = (data: any) => {
       const { message, gameData } = data;
       console.log("RECEIVED NEW GAME DATA: ", data.gameData);
       setRoomInfo(gameData);
-      setMessage(message);
+      setMessage(message ?? "");
       gameLogic.setGameData(gameData);
     };
 
@@ -168,8 +157,8 @@ export const useGameSocket = (initialGameLogic: any) => {
     socket.on("room-created", handleRoomCreated);
     socket.on("room-joined", handleRoomJoined);
     socket.on("new-player", handleNewPlayer);
-    socket.on("game-started", handleGameStarted);
-    socket.on("next-turn", handleNextTurn);
+    socket.on("game-started", handleReceivedGameData);
+    socket.on("next-turn", handleReceivedGameData);
     socket.on("player-rejoined", handleRejoin);
     socket.on("ready-players-updated", handleReadyPlayer);
 
@@ -179,8 +168,8 @@ export const useGameSocket = (initialGameLogic: any) => {
       socket.off("room-created", handleRoomCreated);
       socket.off("room-joined", handleRoomJoined);
       socket.off("new-player", handleNewPlayer);
-      socket.off("game-started", handleGameStarted);
-      socket.off("next-turn", handleNextTurn);
+      socket.off("game-started", handleReceivedGameData);
+      socket.off("next-turn", handleReceivedGameData);
       socket.off("ready-players-updated", handleReadyPlayer);
     };
   }, [socket, gameLogic]);

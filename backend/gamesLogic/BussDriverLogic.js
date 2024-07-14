@@ -307,8 +307,14 @@ class BussDriverLogic {
         // Draw a new card
         let newCardObject = await drawACard(currentGameData.deckId);
         if (newCardObject.cards.length === 0) {
-          // TODO return discard pile to deck and draw the cards from there.
-          await returnPileToDeck(currentGameData.deckId, "discard");
+          const result = await returnPileToDeck(
+            currentGameData.deckId,
+            "discard"
+          );
+          if (!result.success) {
+            this.throwError("Shuffling the deck failed");
+            return;
+          }
           newCardObject = await drawACard(currentGameData.deckId);
         }
         const newCard = newCardObject.cards[0];

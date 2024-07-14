@@ -2,6 +2,7 @@ const { Server } = require("socket.io");
 const { nanoid } = require("nanoid");
 const FuckTheDealerLogic = require("../gamesLogic/FuckTheDealerLogic");
 const BussDriverLogic = require("../gamesLogic/BussDriverLogic");
+const RingOfFireLogic = require("../gamesLogic/RingOfFireLogic");
 
 const socketData = {}; // Stores information about each room
 const socketIdToUsername = {}; // Maps socket IDs to usernames
@@ -99,6 +100,10 @@ function initializeSocket(server, options) {
               const bdLogic = new BussDriverLogic(io, roomId, socketData);
               bdLogic.rejoinGame(player, socket);
               break;
+            case "ringOfFire":
+              const rofLogic = new RingOfFireLogic(io, roomId, socketData);
+              rofLogic.rejoinGame(player, socket);
+              break;
             default:
               console.log(`Unknown game: ${socketData[roomId].game.name}`);
               break;
@@ -149,6 +154,10 @@ function initializeSocket(server, options) {
             const bdLogic = new BussDriverLogic(io, roomId, socketData);
             bdLogic.startGame();
             break;
+          case "ringOfFire":
+            const rofLogic = new RingOfFireLogic(io, roomId, socketData);
+            rofLogic.startGame();
+            break;
           default:
             console.log(`Unknown game: ${socketData[roomId].game.name}`);
             break;
@@ -173,11 +182,14 @@ function initializeSocket(server, options) {
             const ftdLogic = new FuckTheDealerLogic(io, roomId, socketData);
             ftdLogic.handlePlayerAction(action, extraData); // Pass extra data to the game logic
             break;
-          case "bussDriver": {
+          case "bussDriver":
             const bdLogic = new BussDriverLogic(io, roomId, socketData);
             bdLogic.handlePlayerAction(action, extraData);
             break;
-          }
+          case "ringOfFire":
+            const rofLogic = new RingOfFireLogic(io, roomId, socketData);
+            rofLogic.handlePlayerAction(action, extraData);
+            break;
           default:
             console.log(`Unknown game: ${socketData[roomId].game.name}`);
             break;

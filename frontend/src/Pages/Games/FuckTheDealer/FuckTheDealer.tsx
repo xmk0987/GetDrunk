@@ -41,7 +41,7 @@ const FuckTheDealer: React.FC = () => {
   const [bigger, setBigger] = useState<boolean>(false);
   const [smaller, setSmaller] = useState<boolean>(false);
 
-  const handleCardClick = (value: number) => {
+  const handleCardClick = (value: number): void => {
     setGuessedCard(value);
     const cardToGuessValue = mapCardValueToNumber(
       gameLogic.deck!.cards[0].value
@@ -60,7 +60,10 @@ const FuckTheDealer: React.FC = () => {
     }
   };
 
-  const handleWrongGuess = (value: number, sizeComparison: string = "") => {
+  const handleWrongGuess = (
+    value: number,
+    sizeComparison: string = ""
+  ): void => {
     const isLastGuess =
       gameLogic.deck?.remaining <= 20 || sizeComparison === "";
     const action = isLastGuess
@@ -74,7 +77,7 @@ const FuckTheDealer: React.FC = () => {
     setSmaller(sizeComparison === "smaller");
   };
 
-  const resetGuessState = () => {
+  const resetGuessState = (): void => {
     setBigger(false);
     setSmaller(false);
   };

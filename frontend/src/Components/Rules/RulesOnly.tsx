@@ -3,9 +3,9 @@ import "./rules.css";
 
 const RulesOnly = ({ rules }: { rules: string[] }) => {
   return (
-    <ol className="rules-list">
+    <ul className="rules-list">
       {rules && rules.map((rule, index) => <li key={index}>{rule}</li>)}
-    </ol>
+    </ul>
   );
 };
 
