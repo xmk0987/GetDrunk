@@ -10,6 +10,7 @@ import "./App.css";
 import { SocketProvider } from "./Providers/SocketContext";
 import BussDriver from "./Pages/Games/BussDriver/BussDriver";
 import RingOfFire from "./Pages/Games/RingOfFire/RingOfFIre";
+import ThirtyShots from "./Pages/Games/30Shots/30Shots";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/games/spinTheBottle" element={<SpinTheBottle />} />
           <Route path="/games/bussDriver" element={<BussDriver />} />
           <Route path="/games/ringOfFire" element={<RingOfFire />} />
+          <Route path="/games/30Shots" element={<ThirtyShots />} />
           <Route path="/*" element={<Home />} />
         </Routes>
       </SocketProvider>

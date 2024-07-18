@@ -1,0 +1,39 @@
+.thirtyshots-container {
+  width: 100%;
+  height: calc(100vh - var(--navbar-height));
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.thirtyshots-shot {
+  font-size: 100px;
+  position: absolute;
+  transform: translate(0, -100%);
+  color: red;
+}
+
+.thirtyshots-timer {
+  font-size: 100px;
+  color: white;
+  text-shadow: var(--text-shadow);
+}
+
+.thirtyshots-timer-button {
+  background-color: var(--secondary-color);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  width: 100px;
+  height: 30px;
+}
+
+.thirtyshots-timer-button-pause {
+  background-color: var(--accent-color3);
+  color: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  width: 100px;
+  height: 30px;
+}

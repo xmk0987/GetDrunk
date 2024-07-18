@@ -31,10 +31,6 @@ const RingOfFire: React.FC = () => {
 
   const [showCardRule, setShowCardRule] = useState<boolean>(false);
 
-  const handleCardClick = (index: number) => {
-    handlePlayerAction("CARD-TURNED", { index });
-  };
-
   const cardRules: { [key: number]: string } = {
     1: "Ace (A): 'Waterfall' - The player who drew the card starts drinking, then the next player in the circle starts, and so on. Players can only stop drinking when the person before them stops.",
     2: "Two (2): 'You' - The player who drew the card points at another player, who must take a drink.",
@@ -49,6 +45,10 @@ const RingOfFire: React.FC = () => {
     11: "Jack (J): 'Make a Rule' - The player who drew the card creates a new rule that must be followed for the rest of the game. Anyone who breaks the rule drinks.",
     12: "Queen (Q): 'Question Master' - The player who drew the card becomes the Question Master. They can ask questions, and if another player answers any of their questions, that player must drink. This lasts until another Queen is drawn.",
     13: "King (K): 'King's Cup' - The first three players to draw a King pour some of their drink into the King's Cup. The player who draws the fourth King must drink the entire King's Cup.",
+  };
+
+  const handleCardClick = (index: number) => {
+    handlePlayerAction("CARD-TURNED", { index });
   };
 
   const isGameOver = () => {
@@ -110,7 +110,10 @@ const RingOfFire: React.FC = () => {
                   ></img>
                 </div>
                 {showCardRule ? (
-                  <div data-testid="rof-turned-card-rules" className="rof-turned-card-rule-popup">
+                  <div
+                    data-testid="rof-turned-card-rules"
+                    className="rof-turned-card-rule-popup"
+                  >
                     <p className="rof-turned-card-rule">
                       {cardRules[mapCardValueToNumber(gameLogic.card.value)]}
                     </p>

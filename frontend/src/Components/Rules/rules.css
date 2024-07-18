@@ -25,6 +25,7 @@
 .rules-list {
   width: 100%;
   min-height: 255px;
+  flex-grow: 1;
   padding: 25px;
   overflow: scroll;
   display: flex;
