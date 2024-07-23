@@ -1,15 +1,10 @@
 /* eslint-disable testing-library/no-node-access */
 import React from "react";
-import {
-  render,
-  screen,
-  waitFor,
-  fireEvent,
-} from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { MemoryRouter } from "react-router-dom";
 import { useGameSocket } from "../../Hooks/useGameSocket";
-import { RingOfFireLogic } from "../../utils/gameLogics/ringOfFireLogic";
+import { RingOfFireLogic } from "../../gameLogics/ringOfFireLogic";
 import { TEST_ROF_GAME } from "../testConstants";
 import RingOfFire from "../../Pages/Games/RingOfFire/RingOfFIre";
 

@@ -5,7 +5,7 @@ import Navbar from "../../../Components/Navbar/Navbar";
 import GetIntoGame from "../../../Components/Games/GetIntoGame/GetIntoGame";
 import GameLobby from "../../../Components/Games/Lobby/GameLobby";
 import RulesPopup from "../../../Components/Rules/RulesPopup";
-import { RingOfFireLogic } from "../../../utils/gameLogics/ringOfFireLogic";
+import { RingOfFireLogic } from "../../../gameLogics/ringOfFireLogic";
 import GameMessage from "../../../Components/Games/Message/GameMessage";
 import GameOver from "../../../Components/Games/GameOver/GameOver";
 

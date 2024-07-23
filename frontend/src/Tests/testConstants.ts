@@ -1,5 +1,5 @@
-import { FuckTheDealerLogic } from "../utils/gameLogics/fuckTheDealerLogic";
-import { RingOfFireLogic } from "../utils/gameLogics/ringOfFireLogic";
+import { FuckTheDealerLogic } from "../gameLogics/fuckTheDealerLogic";
+import { RingOfFireLogic } from "../gameLogics/ringOfFireLogic";
 
 // FUCK THE DEALAER TEST CONSTANTS
 

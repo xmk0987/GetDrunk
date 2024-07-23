@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { useGameSocket } from "../../../Hooks/useGameSocket";
 import { games } from "../../../utils/games/games";
-import { FuckTheDealerLogic } from "../../../utils/gameLogics/fuckTheDealerLogic";
+import { FuckTheDealerLogic } from "../../../gameLogics/fuckTheDealerLogic";
 import { Card } from "../../../utils/types/types";
 import Navbar from "../../../Components/Navbar/Navbar";
 import GetIntoGame from "../../../Components/Games/GetIntoGame/GetIntoGame";

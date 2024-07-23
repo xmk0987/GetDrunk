@@ -1,5 +1,5 @@
 import { Socket } from "socket.io-client";
-import { Card, Player } from "../types/types";
+import { Card, Player } from "../utils/types/types";
 
 /**
  * Class representing the game logic for "Ring Of Fire".

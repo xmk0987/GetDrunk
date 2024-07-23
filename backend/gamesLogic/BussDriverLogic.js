@@ -37,7 +37,7 @@ class BussDriverLogic {
 
     this.handleTurnPyramidCard();
 
-    this.io.to(this.roomId).emit("game-started", roomData);
+    this.io.to(this.roomId).emit("game-started", { gameData: roomData });
   }
 
   // Send the player's hand to the client

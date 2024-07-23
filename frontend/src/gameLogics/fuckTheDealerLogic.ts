@@ -1,5 +1,5 @@
 import { Socket } from "socket.io-client";
-import { Player } from "../types/types";
+import { Player } from "../utils/types/types";
 
 /**
  * Class representing the game logic for "Fuck the Dealer".

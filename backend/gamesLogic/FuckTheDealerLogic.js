@@ -50,7 +50,7 @@ class FuckTheDealerLogic {
         roomData.game.dealer = dealer;
         roomData.game.guesser = playerInTurn;
 
-        this.io.to(this.roomId).emit("game-started", roomData);
+        this.io.to(this.roomId).emit("game-started", { gameData: roomData });
       }
     }
   }

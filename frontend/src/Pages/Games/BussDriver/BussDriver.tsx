@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { useGameSocket } from "../../../Hooks/useGameSocket";
 import { games } from "../../../utils/games/games";
-import { BussDriverLogic } from "../../../utils/gameLogics/bussDriverLogic";
+import { BussDriverLogic } from "../../../gameLogics/bussDriverLogic";
 import { Card } from "../../../utils/types/types";
 import Navbar from "../../../Components/Navbar/Navbar";
 import GetIntoGame from "../../../Components/Games/GetIntoGame/GetIntoGame";

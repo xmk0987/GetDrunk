@@ -3,6 +3,7 @@ const { nanoid } = require("nanoid");
 const FuckTheDealerLogic = require("../gamesLogic/FuckTheDealerLogic");
 const BussDriverLogic = require("../gamesLogic/BussDriverLogic");
 const RingOfFireLogic = require("../gamesLogic/RingOfFireLogic");
+const HorseTrackLogic = require("../gamesLogic/HorseTrackLogic");
 
 const socketData = {}; // Stores information about each room
 const socketIdToUsername = {}; // Maps socket IDs to usernames
@@ -104,6 +105,10 @@ function initializeSocket(server, options) {
               const rofLogic = new RingOfFireLogic(io, roomId, socketData);
               rofLogic.rejoinGame(player, socket);
               break;
+            case "horseTrack":
+              const htLogic = new HorseTrackLogic(io, roomId, socketData);
+              htLogic.rejoinGame(player, socket);
+              break;
             default:
               console.log(`Unknown game: ${socketData[roomId].game.name}`);
               break;
@@ -158,6 +163,10 @@ function initializeSocket(server, options) {
             const rofLogic = new RingOfFireLogic(io, roomId, socketData);
             rofLogic.startGame();
             break;
+          case "horseTrack":
+            const htLogic = new HorseTrackLogic(io, roomId, socketData);
+            htLogic.startGame();
+            break;
           default:
             console.log(`Unknown game: ${socketData[roomId].game.name}`);
             break;
@@ -189,6 +198,10 @@ function initializeSocket(server, options) {
           case "ringOfFire":
             const rofLogic = new RingOfFireLogic(io, roomId, socketData);
             rofLogic.handlePlayerAction(action, extraData);
+            break;
+          case "horseTrack":
+            const htLogic = new HorseTrackLogic(io, roomId, socketData);
+            htLogic.handlePlayerAction(action, extraData);
             break;
           default:
             console.log(`Unknown game: ${socketData[roomId].game.name}`);

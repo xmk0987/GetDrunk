@@ -1,4 +1,3 @@
-import { Socket } from "socket.io-client";
 // types.ts
 export interface Card {
   code: string;
@@ -49,6 +48,31 @@ export interface Game {
   rules: string[];
 }
 
+export interface HorseProps {
+  position: number;
+  img: string;
+  suit: string;
+  frozen: boolean;
+}
+
 export interface IconProps {
   size: number;
 }
+
+export interface HorsesState {
+  spade: HorseProps;
+  heart: HorseProps;
+  cross: HorseProps;
+  diamond: HorseProps;
+}
+
+export type HTSuitOption = {
+  value: string;
+  label: JSX.Element;
+};
+
+export interface HTBet {
+  bet: number;
+  suit: HorseKey;
+}
+export type HorseKey = "spade" | "heart" | "cross" | "diamond";

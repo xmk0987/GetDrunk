@@ -11,7 +11,7 @@ import "@testing-library/jest-dom";
 import { MemoryRouter } from "react-router-dom";
 import FuckTheDealer from "../../Pages/Games/FuckTheDealer/FuckTheDealer";
 import { useGameSocket } from "../../Hooks/useGameSocket";
-import { FuckTheDealerLogic } from "../../utils/gameLogics/fuckTheDealerLogic";
+import { FuckTheDealerLogic } from "../../gameLogics/fuckTheDealerLogic";
 import { TEST_FTD_GAME, TEST_FTD_GAME_OVER } from "../testConstants";
 
 // Mock the useGameSocket hook
