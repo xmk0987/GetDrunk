@@ -16,9 +16,7 @@ const RingOfFire: React.FC = () => {
   const GAME = games["ringOfFire"];
   const rofLogic = useMemo(() => new RingOfFireLogic(), []);
   const {
-    error,
     message,
-    loading,
     player,
     gameLogic,
     roomInfo,
