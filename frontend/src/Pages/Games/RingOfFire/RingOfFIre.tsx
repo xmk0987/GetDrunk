@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useGameSocket } from "../../../Hooks/useGameSocket";
 import { games } from "../../../utils/games/games";
 import Navbar from "../../../Components/Navbar/Navbar";
@@ -30,6 +30,7 @@ const RingOfFire: React.FC = () => {
   } = useGameSocket(rofLogic);
 
   const [showCardRule, setShowCardRule] = useState<boolean>(false);
+  const [radius, setRadius] = useState<number>(200); // Default radius is 200
 
   const cardRules: { [key: number]: string } = {
     1: "Ace (A): 'Waterfall' - The player who drew the card starts drinking, then the next player in the circle starts, and so on. Players can only stop drinking when the person before them stops.",
@@ -47,6 +48,28 @@ const RingOfFire: React.FC = () => {
     13: "King (K): 'King's Cup' - The first three players to draw a King pour some of their drink into the King's Cup. The player who draws the fourth King must drink the entire King's Cup.",
   };
 
+  // Set radius based on screen width
+  useEffect(() => {
+    const updateRadius = () => {
+      if (window.innerWidth <= 450) {
+        setRadius(100); // Smaller radius for small screens
+      } else if (window.innerWidth <= 600) {
+        setRadius(150); // Smaller radius for small screens
+      } else {
+        setRadius(200); // Default radius for larger screens
+      }
+    };
+
+    // Set the radius initially
+    updateRadius();
+
+    // Listen for window resize events
+    window.addEventListener("resize", updateRadius);
+
+    // Clean up the event listener on component unmount
+    return () => window.removeEventListener("resize", updateRadius);
+  }, []);
+
   const handleCardClick = (index: number) => {
     handlePlayerAction("CARD-TURNED", { index });
   };
@@ -56,7 +79,6 @@ const RingOfFire: React.FC = () => {
   };
 
   const cardBack = "https://deckofcardsapi.com/static/img/back.png";
-  const radius = 200;
 
   const isPlayerTurn = () => {
     if (!player || !gameLogic) {

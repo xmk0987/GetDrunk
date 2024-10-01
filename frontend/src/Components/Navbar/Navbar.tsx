@@ -31,9 +31,6 @@ const Navbar: React.FC<NavBarProps> = ({ text, resetGame }) => {
         <li>
           <button onClick={() => handleNavigate("/games")}>Games</button>
         </li>
-        <li>
-          <button onClick={() => handleNavigate("/about")}>About</button>
-        </li>
       </ul>
     </nav>
   );

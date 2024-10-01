@@ -54,3 +54,17 @@
   letter-spacing: 2px;
   font-size: 30px;
 }
+
+@media only screen and (max-width: 500px) {
+  .lobby {
+    font-size: 13px;
+  }
+
+  .game-info button {
+    margin-top: 10px;
+  }
+
+  .game-info span {
+    font-size: 16px;
+  }
+}

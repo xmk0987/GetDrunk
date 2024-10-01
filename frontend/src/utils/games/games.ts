@@ -144,7 +144,7 @@ export const games: Games = {
       "The players who bet on the right horse can give out drinks equal to their bet amount to all the players who chose a losing horse.",
     ],
   },
-  biggerCard: {
+ /*  biggerCard: {
     name: "CARD BATTLE",
     image: biggerCardImage,
     desc: "Need to get drunk fast?",
@@ -170,5 +170,5 @@ export const games: Games = {
       "Player either completes truth or dare OR drinks 5 sips.",
       "Next players turn.",
     ],
-  },
+  }, */
 };

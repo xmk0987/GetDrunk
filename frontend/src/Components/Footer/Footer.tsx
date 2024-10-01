@@ -5,9 +5,6 @@ const Footer = () => (
   <footer>
     <ul>
       <li>Drink responsibly!</li>
-      <li>
-        <button>Contact us</button>
-      </li>
     </ul>
   </footer>
 );

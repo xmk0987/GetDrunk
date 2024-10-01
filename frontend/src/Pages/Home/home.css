@@ -24,3 +24,12 @@
 .lets-drink:hover::before {
   content: "LET'S DRINK!!";
 }
+
+
+
+@media only screen and (max-width: 450px) {
+.lets-drink {
+  padding: 5px 10px !important;
+  font-size: 35px !important;
+}
+}

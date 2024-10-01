@@ -385,3 +385,9 @@
   background-color: var(--accent-color3);
   color: black;
 }
+
+@media only screen and (max-width: 350px) {
+  .bd-pyramid-stack {
+    min-width: 50px;
+  }
+}

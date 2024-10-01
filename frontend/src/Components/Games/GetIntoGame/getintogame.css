@@ -49,3 +49,12 @@
 .getintogame-back:hover {
   opacity: 0.5;
 }
+
+@media only screen and (max-width: 500px) {
+  .getintogame-options {
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+}
