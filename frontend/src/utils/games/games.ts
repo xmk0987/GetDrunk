@@ -20,7 +20,7 @@ export const games: Games = {
   spinTheBottle: {
     name: "SPIN THE BOTTLE",
     image: spinTheBottleImage,
-    desc: "The old classic. We provide the bottle. You get drunk.",
+    desc: "The old classic. We provide the bottle.",
     minPlayers: 3,
     maxPlayers: Infinity,
     route: "spinTheBottle",
@@ -112,7 +112,7 @@ export const games: Games = {
   thirtyShots: {
     name: "30 SHOTS",
     image: thirtyShotsImage,
-    desc: "Hopefully you know how to burp.",
+    desc: "Can you burp.",
     minPlayers: 1,
     maxPlayers: Infinity,
     route: "30Shots",

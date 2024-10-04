@@ -12,7 +12,7 @@
 }
 
 .lets-drink::before {
-  content: "READY TO DRINK?";
+  content: "START A GAME?";
 }
 
 .lets-drink:hover {
@@ -22,7 +22,7 @@
 }
 
 .lets-drink:hover::before {
-  content: "LET'S DRINK!!";
+  content: "LET'S PLAY!!";
 }
 
 

@@ -13,7 +13,7 @@ const Home = () => {
 
   return (
     <>
-      <Navbar text="GET DRUNK" />
+      <Navbar text="PARTY GAMES" />
       <main className="home-main">
         <button
           className="lets-drink default-btn-style"
