@@ -11,6 +11,9 @@ Spin The Bottle, F*ck the Dealer, BussDriver and Ring Of Fire.
 
 Many more are being done.
 
+## Why
+
+This application was done just to try out sockets and card games in real time for fun. Practiced a little testing in it also.
 
 ## How to try
 
